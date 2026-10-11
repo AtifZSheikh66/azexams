@@ -3,484 +3,1196 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#0f1419">
+<meta name="theme-color" content="#141218">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="AZExams">
 <meta name="format-detection" content="telephone=no">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23f97316'/%3E%3Ctext x='50' y='62' font-size='46' font-weight='bold' text-anchor='middle' fill='white' font-family='sans-serif'%3EAZ%3C/text%3E%3C/svg%3E">
-<title>AZExams — Study & Quiz</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23ffb599'/%3E%3Ctext x='50' y='64' font-size='46' font-weight='700' text-anchor='middle' fill='%23201400' font-family='sans-serif'%3EAZ%3C/text%3E%3C/svg%3E">
+<title>AZExams</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+  /* ═══════════════════════════════════════════════════════════
+     MATERIAL DESIGN 3 TOKENS
+     ═══════════════════════════════════════════════════════════ */
   :root {
-    --bg: #0f1419; --bg2: #1a2027; --bg3: #242b33;
-    --border: #2d3748; --text: #e6edf3; --muted: #8b98a5;
-    --accent: #f97316; --accent2: #fb923c;
-    --green: #22c55e; --red: #ef4444; --yellow: #eab308; --blue: #3b82f6;
-    --nav-h: 68px;
+    /* Surfaces */
+    --surface: #141218;
+    --surface-1: #1d1b20;
+    --surface-2: #232128;
+    --surface-3: #2b2930;
+    --surface-4: #322f37;
+    --surface-5: #37333d;
+    --on-surface: #e6e0e9;
+    --on-surface-var: #cac4d0;
+    --outline: #49454f;
+    --outline-var: #49454f;
+    
+    /* Primary (dynamic orange-ish) */
+    --primary: #ffb599;
+    --on-primary: #5b1a00;
+    --primary-container: #7f2b00;
+    --on-primary-container: #ffdbcd;
+    
+    /* Secondary */
+    --secondary: #e7bdb0;
+    --on-secondary: #442a22;
+    --secondary-container: #5d4037;
+    --on-secondary-container: #ffdbcd;
+    
+    /* Error */
+    --error: #ffb4ab;
+    --on-error: #690005;
+    --error-container: #93000a;
+    
+    /* Success (extended) */
+    --success: #a6d4a4;
+    --success-container: #2d4a2c;
+    
+    /* Warning */
+    --warning: #f6c66b;
+    --warning-container: #5a4100;
+    
+    /* Ripple */
+    --ripple-light: rgba(255, 255, 255, 0.10);
+    --ripple-dark: rgba(255, 255, 255, 0.06);
+    
+    /* Elevation shadows */
+    --elev-1: 0 1px 2px rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
+    --elev-2: 0 1px 2px rgba(0,0,0,0.3), 0 2px 6px 2px rgba(0,0,0,0.15);
+    --elev-3: 0 1px 3px rgba(0,0,0,0.3), 0 4px 8px 3px rgba(0,0,0,0.15);
+    
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --appbar-h: 64px;
+    --navbar-h: 80px;
+    --fab-size: 56px;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { overscroll-behavior-y: none; touch-action: manipulation; }
+  
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html, body {
+    overscroll-behavior-y: none;
+    touch-action: manipulation;
+  }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: var(--bg); color: var(--text);
-    min-height: 100vh; min-height: 100dvh;
-    line-height: 1.5; -webkit-font-smoothing: antialiased; font-size: 16px;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--surface);
+    color: var(--on-surface);
+    min-height: 100vh;
+    min-height: 100dvh;
+    line-height: 1.5;
+    font-size: 16px;
+    letter-spacing: 0.25px;
+    -webkit-font-smoothing: antialiased;
+    -webkit-user-select: none;
+    user-select: none;
   }
-  header {
-    background: var(--bg2); border-bottom: 1px solid var(--border);
-    padding: calc(var(--safe-top) + 12px) 16px 12px;
-    position: sticky; top: 0; z-index: 100;
-    display: flex; justify-content: space-between; align-items: center;
-    gap: 12px; min-height: 56px;
+  /* Allow text selection in content areas */
+  .notes-content, textarea, .question-text, .why {
+    -webkit-user-select: text;
+    user-select: text;
   }
-  .logo { font-size: 20px; font-weight: 800; color: var(--accent); letter-spacing: -0.3px; display: flex; align-items: center; gap: 8px; }
-  .logo::before { content: "📘"; font-size: 22px; }
-  .header-actions { display: flex; gap: 6px; align-items: center; }
-  .header-actions button {
-    background: transparent; border: 1px solid var(--border); color: var(--text);
-    border-radius: 10px; padding: 8px 12px; font-size: 14px; cursor: pointer;
-    min-height: 40px; font-family: inherit; display: flex; align-items: center; gap: 6px;
-    font-weight: 600;
+  
+  /* ═══════════════════════════════════════════════════════════
+     MATERIAL 3 TOP APP BAR
+     ═══════════════════════════════════════════════════════════ */
+  .appbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--surface-2);
+    padding: calc(var(--safe-top) + 8px) 8px 8px 16px;
+    min-height: var(--appbar-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    box-shadow: var(--elev-2);
   }
-  .header-actions button:active { background: var(--bg3); }
-  nav.top-nav { display: none; gap: 4px; }
-  nav.top-nav button {
-    background: transparent; color: var(--muted); border: 1px solid transparent;
-    padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 14px;
-    font-weight: 600; min-height: 40px; font-family: inherit;
+  .appbar-title {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--on-surface);
+    letter-spacing: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
   }
-  nav.top-nav button.active { color: var(--accent); background: var(--bg3); border-color: var(--border); }
-  nav.bottom-nav {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: var(--bg2); border-top: 1px solid var(--border);
+  .appbar-title .brand-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--primary) 0%, #ff8a5b 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--on-primary);
+    flex-shrink: 0;
+  }
+  .appbar-actions {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .icon-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    color: var(--on-surface-var);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.15s;
+  }
+  .icon-btn:active { background: var(--ripple-light); }
+  
+  /* ═══════════════════════════════════════════════════════════
+     RIPPLE EFFECT (Material)
+     ═══════════════════════════════════════════════════════════ */
+  .ripple {
+    position: relative;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ripple .rp {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple-anim 0.6s ease-out;
+    background: var(--ripple-light);
+    pointer-events: none;
+  }
+  @keyframes ripple-anim {
+    to { transform: scale(4); opacity: 0; }
+  }
+  
+  /* ═══════════════════════════════════════════════════════════
+     MAIN CONTENT
+     ═══════════════════════════════════════════════════════════ */
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 12px 12px calc(var(--navbar-h) + var(--safe-bottom) + 88px);
+  }
+  .section { display: none; }
+  .section.active { display: block; animation: fadeIn 0.2s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  
+  /* Material 3 Card */
+  .card {
+    background: var(--surface-2);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 12px;
+    transition: background 0.15s;
+  }
+  .card.elev { box-shadow: var(--elev-1); }
+  .card.outlined { border: 1px solid var(--outline-var); background: var(--surface); }
+  
+  h2.card-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--on-surface);
+    margin-bottom: 4px;
+    letter-spacing: 0;
+  }
+  .card-sub {
+    font-size: 14px;
+    color: var(--on-surface-var);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--on-surface-var);
+    margin: 20px 0 8px;
+    display: block;
+  }
+  
+  /* ═══════════════════════════════════════════════════════════
+     MATERIAL 3 TEXT FIELDS
+     ═══════════════════════════════════════════════════════════ */
+  .m3-field {
+    position: relative;
+    margin-bottom: 16px;
+  }
+  .m3-field textarea,
+  .m3-field input {
+    width: 100%;
+    background: var(--surface-4);
+    color: var(--on-surface);
+    border: none;
+    border-bottom: 1px solid var(--on-surface-var);
+    border-radius: 12px 12px 0 0;
+    padding: 22px 16px 10px;
+    font-family: 'Roboto', system-ui, sans-serif;
+    font-size: 16px;
+    outline: none;
+    transition: background 0.15s, border-color 0.15s;
+    -webkit-appearance: none;
+    min-height: 56px;
+  }
+  .m3-field textarea {
+    min-height: 140px;
+    resize: vertical;
+    line-height: 1.55;
+    font-family: 'Roboto Mono', ui-monospace, monospace;
+    font-size: 14px;
+  }
+  .m3-field textarea.notes-input {
+    font-family: 'Roboto', system-ui, sans-serif;
+    font-size: 15px;
+  }
+  .m3-field textarea:focus,
+  .m3-field input:focus {
+    background: var(--surface-5);
+    border-bottom: 2px solid var(--primary);
+  }
+  .m3-field label {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    font-size: 16px;
+    color: var(--on-surface-var);
+    pointer-events: none;
+    transition: all 0.15s ease-out;
+    background: transparent;
+  }
+  .m3-field:focus-within label,
+  .m3-field.filled label {
+    top: 6px;
+    font-size: 11px;
+    color: var(--primary);
+    letter-spacing: 0.5px;
+  }
+  .m3-field:not(:focus-within) label { color: var(--on-surface-var); }
+  
+  /* ═══════════════════════════════════════════════════════════
+     MATERIAL 3 BUTTONS
+     ═══════════════════════════════════════════════════════════ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    border-radius: 100px;
+    padding: 0 24px;
+    min-height: 48px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.15s, background 0.15s;
+    user-select: none;
+  }
+  .btn .icon { font-size: 18px; }
+  
+  .btn-filled {
+    background: var(--primary);
+    color: var(--on-primary);
+  }
+  .btn-filled:active { box-shadow: var(--elev-1); }
+  
+  .btn-tonal {
+    background: var(--secondary-container);
+    color: var(--on-secondary-container);
+  }
+  
+  .btn-outlined {
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--outline);
+  }
+  .btn-outlined:active { background: var(--ripple-light); }
+  
+  .btn-text {
+    background: transparent;
+    color: var(--primary);
+    padding: 0 12px;
+  }
+  .btn-text:active { background: var(--ripple-light); }
+  
+  .btn-error {
+    background: transparent;
+    color: var(--error);
+    border: 1px solid var(--outline);
+  }
+  
+  .btn-block { width: 100%; }
+  .btn:disabled { opacity: 0.38; pointer-events: none; }
+  
+  /* ═══════════════════════════════════════════════════════════
+     MATERIAL 3 BOTTOM NAVIGATION
+     ═══════════════════════════════════════════════════════════ */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--surface-2);
     padding-bottom: var(--safe-bottom);
-    display: grid; grid-template-columns: repeat(5, 1fr);
-    z-index: 200; box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    height: calc(var(--navbar-h) + var(--safe-bottom));
+    z-index: 200;
+    border-top: 1px solid var(--outline-var);
   }
-  nav.bottom-nav button {
-    background: transparent; border: none; color: var(--muted);
-    padding: 10px 2px 12px; min-height: var(--nav-h); cursor: pointer;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 4px; font-size: 10px; font-weight: 600; font-family: inherit;
+  .nav-item {
+    background: transparent;
+    border: none;
+    color: var(--on-surface-var);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 12px 4px 16px;
+    cursor: pointer;
+    font-family: inherit;
+    position: relative;
+    transition: color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-item .icon-wrapper {
+    width: 64px;
+    height: 32px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
     position: relative;
   }
-  nav.bottom-nav button .icon { font-size: 21px; line-height: 1; }
-  nav.bottom-nav button.active { color: var(--accent); }
-  nav.bottom-nav button.active::before {
-    content: ""; position: absolute; top: 0; left: 22%; right: 22%;
-    height: 3px; background: var(--accent); border-radius: 0 0 4px 4px;
+  .nav-item .icon { font-size: 22px; line-height: 1; }
+  .nav-item .label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
   }
-  main {
-    max-width: 900px; margin: 0 auto;
-    padding: 16px 16px calc(var(--nav-h) + var(--safe-bottom) + 32px);
+  .nav-item.active { color: var(--on-secondary-container); }
+  .nav-item.active .icon-wrapper { background: var(--secondary-container); }
+  .nav-item.active .label { font-weight: 700; color: var(--on-surface); }
+  
+  /* ═══════════════════════════════════════════════════════════
+     MATERIAL 3 FAB
+     ═══════════════════════════════════════════════════════════ */
+  .fab {
+    position: fixed;
+    right: 16px;
+    bottom: calc(var(--navbar-h) + var(--safe-bottom) + 16px);
+    width: var(--fab-size);
+    height: var(--fab-size);
+    border-radius: 16px;
+    background: var(--primary-container);
+    color: var(--on-primary-container);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: var(--elev-3);
+    z-index: 150;
+    transition: transform 0.15s, box-shadow 0.15s;
+    overflow: hidden;
   }
-  section { display: none; }
-  section.active { display: block; }
-  .card {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 14px; padding: 20px; margin-bottom: 14px;
+  .fab:active { transform: scale(0.95); }
+  .fab.hidden { display: none; }
+  
+  /* ═══════════════════════════════════════════════════════════
+     MATERIAL 3 BOTTOM SHEET
+     ═══════════════════════════════════════════════════════════ */
+  .scrim {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 300;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
   }
-  h2 { font-size: 20px; margin-bottom: 6px; letter-spacing: -0.3px; }
-  h3 { font-size: 13px; margin-bottom: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; }
-  p.sub { color: var(--muted); font-size: 14px; margin-bottom: 18px; line-height: 1.55; }
-  .banner {
-    background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.4);
-    border-radius: 12px; padding: 14px 16px; margin-bottom: 14px;
-    font-size: 14px; line-height: 1.5; display: flex; gap: 12px; align-items: flex-start;
+  .scrim.show { opacity: 1; pointer-events: auto; }
+  
+  .sheet {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--surface-2);
+    border-radius: 28px 28px 0 0;
+    z-index: 400;
+    transform: translateY(100%);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: var(--safe-bottom);
   }
-  .banner .icon { font-size: 20px; flex-shrink: 0; }
-  .banner strong { color: var(--accent); }
-  textarea {
-    width: 100%; min-height: 180px; background: var(--bg); color: var(--text);
-    border: 1px solid var(--border); border-radius: 12px; padding: 14px;
-    font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 16px;
-    resize: vertical; outline: none; line-height: 1.55; -webkit-appearance: none;
+  .sheet.show { transform: translateY(0); }
+  .sheet-handle {
+    width: 32px;
+    height: 4px;
+    background: var(--outline);
+    border-radius: 2px;
+    margin: 12px auto 0;
+    flex-shrink: 0;
   }
-  textarea:focus { border-color: var(--accent); }
-  textarea.notes-area { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; min-height: 160px; }
-  .field-label { display: block; font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-  .field-hint { font-size: 13px; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
-  button.primary {
-    background: var(--accent); color: white; border: none; padding: 14px 22px;
-    border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer;
-    min-height: 50px; font-family: inherit; width: 100%;
-    transition: transform 0.08s, background 0.15s;
+  .sheet-header {
+    padding: 16px 24px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-shrink: 0;
   }
-  button.primary:active { transform: scale(0.98); background: var(--accent2); }
-  button.primary:disabled { opacity: 0.4; cursor: not-allowed; }
-  button.secondary {
-    background: transparent; color: var(--text); border: 1px solid var(--border);
-    padding: 14px 22px; border-radius: 12px; font-weight: 700; font-size: 15px;
-    cursor: pointer; min-height: 50px; font-family: inherit; width: 100%;
+  .sheet-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--on-surface);
+    letter-spacing: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
-  button.secondary:active { transform: scale(0.98); background: var(--bg3); }
-  button.danger {
-    background: transparent; color: var(--red); border: 1px solid var(--red);
-    padding: 12px 18px; border-radius: 12px; font-size: 14px; font-weight: 600;
-    cursor: pointer; min-height: 46px; font-family: inherit;
+  .sheet-body {
+    overflow-y: auto;
+    padding: 8px 24px 24px;
+    -webkit-overflow-scrolling: touch;
+    flex: 1;
+    min-height: 0;
   }
-  button.ghost {
-    background: transparent; color: var(--accent); border: 1px solid var(--border);
-    padding: 10px 16px; border-radius: 10px; font-size: 13px; font-weight: 600;
-    cursor: pointer; min-height: 40px; font-family: inherit;
+  
+  /* ═══════════════════════════════════════════════════════════
+     MATERIAL 3 SNACKBAR
+     ═══════════════════════════════════════════════════════════ */
+  .snackbar {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: calc(var(--navbar-h) + var(--safe-bottom) + 16px);
+    max-width: 500px;
+    margin: 0 auto;
+    background: var(--surface-5);
+    color: var(--on-surface);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: var(--elev-3);
+    z-index: 500;
+    transform: translateY(120%);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
-  button.ghost:active { background: var(--bg3); }
-  .row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
-  .row > * { flex: 1; min-width: 140px; }
-  .row.tight { margin-top: 8px; }
-  .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 14px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-  .chips::-webkit-scrollbar { display: none; }
+  .snackbar.show { transform: translateY(0); }
+  .snackbar .snack-icon { font-size: 18px; flex-shrink: 0; }
+  .snackbar.success { background: var(--success-container); color: var(--success); }
+  .snackbar.error { background: var(--error-container); color: var(--error); }
+  
+  /* ═══════════════════════════════════════════════════════════
+     MATERIAL 3 CHIPS
+     ═══════════════════════════════════════════════════════════ */
+  .chip-row {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px 0 12px;
+    margin: 0 -20px 4px;
+    padding-left: 20px;
+    padding-right: 20px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .chip-row::-webkit-scrollbar { display: none; }
   .chip {
-    flex-shrink: 0; background: var(--bg3); border: 1px solid var(--border);
-    color: var(--muted); padding: 8px 14px; border-radius: 20px;
-    font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
-    min-height: 36px; white-space: nowrap;
+    flex-shrink: 0;
+    background: transparent;
+    border: 1px solid var(--outline);
+    color: var(--on-surface-var);
+    border-radius: 8px;
+    padding: 0 16px;
+    min-height: 36px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    white-space: nowrap;
   }
-  .chip.active { background: rgba(249,115,22,0.15); color: var(--accent); border-color: var(--accent); }
-  .notes-header {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 14px; padding: 16px 18px; margin-bottom: 14px;
+  .chip.active {
+    background: var(--secondary-container);
+    color: var(--on-secondary-container);
+    border-color: transparent;
   }
-  .notes-header .title { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
-  .notes-header .meta { font-size: 12px; color: var(--muted); margin-top: 4px; }
-  .notes-content {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 14px; padding: 22px 20px; line-height: 1.75;
-    font-size: 15.5px; color: var(--text); word-wrap: break-word;
-  }
-  .notes-content h1, .notes-content h2 { font-size: 22px; margin: 22px 0 12px; color: var(--accent); letter-spacing: -0.3px; line-height: 1.3; }
-  .notes-content h1:first-child, .notes-content h2:first-child { margin-top: 0; }
-  .notes-content h3 { font-size: 17px; margin: 20px 0 10px; color: var(--accent2); text-transform: none; letter-spacing: 0; font-weight: 700; }
-  .notes-content h4 { font-size: 15px; margin: 16px 0 8px; color: var(--text); font-weight: 700; }
-  .notes-content p { margin: 0 0 12px; }
-  .notes-content ul, .notes-content ol { margin: 0 0 14px; padding-left: 24px; }
-  .notes-content li { margin-bottom: 6px; }
-  .notes-content li::marker { color: var(--accent); }
-  .notes-content code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 13.5px; font-family: 'SF Mono', Monaco, Consolas, monospace; color: var(--accent2); }
-  .notes-content strong { color: #fff; font-weight: 700; }
-  .notes-content em { color: var(--accent2); }
-  .notes-content blockquote { border-left: 3px solid var(--accent); padding: 8px 14px; margin: 12px 0; color: var(--muted); background: var(--bg3); border-radius: 0 8px 8px 0; font-style: italic; }
-  .notes-content hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
-  .study-footer, .quiz-actions {
-    position: sticky; bottom: calc(var(--nav-h) + var(--safe-bottom) + 8px);
-    display: flex; gap: 10px; padding: 10px;
-    background: rgba(15,20,25,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    border-radius: 14px; border: 1px solid var(--border); margin-top: 8px; z-index: 50;
-  }
-  .study-footer button, .quiz-actions button { flex: 1; }
-  .quiz-shell { display: flex; flex-direction: column; gap: 12px; }
+  .chip:active { background: var(--ripple-light); }
+  
+  /* ═══════════════════════════════════════════════════════════
+     QUESTION UI
+     ═══════════════════════════════════════════════════════════ */
   .quiz-topbar {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 12px; padding: 12px 14px;
-    display: flex; justify-content: space-between; align-items: center;
-    gap: 10px; font-size: 13px; flex-wrap: wrap;
+    background: var(--surface-2);
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
   }
-  .progress-inline { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-  .progress-inline .stat-mini { color: var(--text); font-weight: 600; }
-  .progress-inline .stat-mini.c { color: var(--green); }
-  .progress-inline .stat-mini.w { color: var(--red); }
-  .topbar-actions { display: flex; gap: 6px; align-items: center; }
-  .timer-badge { background: var(--bg3); border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 6px; }
-  .timer-badge.warn { color: var(--yellow); border-color: rgba(234,179,8,0.4); }
-  .timer-badge.danger { color: var(--red); border-color: rgba(239,68,68,0.5); animation: pulse 1s infinite; }
-  @keyframes pulse { 50% { opacity: 0.6; } }
-  .peek-btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 20px; font-weight: 700; font-size: 14px; cursor: pointer; font-family: inherit; }
-  .quiz-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 18px; }
-  .quiz-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
-  .pill { background: var(--bg3); border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; }
-  .pill.easy { color: var(--green); border-color: rgba(34,197,94,0.3); }
-  .pill.medium { color: var(--yellow); border-color: rgba(234,179,8,0.3); }
-  .pill.hard { color: var(--red); border-color: rgba(239,68,68,0.3); }
-  .pill.weak { background: rgba(239,68,68,0.12); color: var(--red); border-color: rgba(239,68,68,0.4); }
-  .timer-bar { height: 5px; background: var(--bg3); border-radius: 3px; overflow: hidden; margin-bottom: 18px; }
-  .timer-fill { height: 100%; background: var(--green); transition: width 1s linear, background 0.3s; border-radius: 3px; }
-  .timer-fill.warn { background: var(--yellow); }
-  .timer-fill.danger { background: var(--red); }
-  .question-text { font-size: 17px; line-height: 1.6; margin-bottom: 18px; white-space: pre-wrap; font-weight: 500; }
+  .progress-inline {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .progress-inline .c { color: var(--success); }
+  .progress-inline .w { color: var(--error); }
+  
+  .timer-badge {
+    background: var(--surface-4);
+    color: var(--on-surface);
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-weight: 500;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Roboto Mono', monospace;
+    transition: all 0.2s;
+  }
+  .timer-badge.warn { background: var(--warning-container); color: var(--warning); }
+  .timer-badge.danger {
+    background: var(--error-container); color: var(--error);
+    animation: pulse-badge 1s infinite;
+  }
+  @keyframes pulse-badge { 50% { opacity: 0.7; } }
+  
+  .question-card {
+    background: var(--surface-2);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 12px;
+  }
+  .meta-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .pill {
+    background: var(--surface-4);
+    color: var(--on-surface-var);
+    padding: 5px 12px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .pill.easy { background: var(--success-container); color: var(--success); }
+  .pill.medium { background: var(--warning-container); color: var(--warning); }
+  .pill.hard { background: var(--error-container); color: var(--error); }
+  .pill.weak {
+    background: var(--error-container);
+    color: var(--error);
+    font-weight: 700;
+  }
+  
+  .timer-track {
+    height: 4px;
+    background: var(--surface-4);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .timer-fill {
+    height: 100%;
+    background: var(--primary);
+    transition: width 1s linear, background 0.3s;
+    border-radius: 2px;
+  }
+  .timer-fill.warn { background: var(--warning); }
+  .timer-fill.danger { background: var(--error); }
+  
+  .question-text {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--on-surface);
+    margin-bottom: 20px;
+    white-space: pre-wrap;
+    font-weight: 400;
+  }
+  
   .options { display: flex; flex-direction: column; gap: 10px; }
   .option {
-    background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px;
-    padding: 14px 16px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px;
-    text-align: left; color: var(--text); font-size: 15px; width: 100%;
-    font-family: inherit; line-height: 1.5; min-height: 56px; -webkit-appearance: none;
-    transition: all 0.12s;
+    background: var(--surface-3);
+    border: 1px solid transparent;
+    border-radius: 16px;
+    padding: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    text-align: left;
+    color: var(--on-surface);
+    font-size: 15.5px;
+    font-family: inherit;
+    line-height: 1.5;
+    min-height: 60px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.15s, border-color 0.15s, transform 0.08s;
+    -webkit-appearance: none;
   }
   .option:active { transform: scale(0.99); }
-  .option.selected { border-color: var(--accent); background: rgba(249,115,22,0.1); }
-  .option.correct { border-color: var(--green); background: rgba(34,197,94,0.12); }
-  .option.wrong { border-color: var(--red); background: rgba(239,68,68,0.12); }
-  .option .num { background: var(--bg3); border-radius: 8px; min-width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: var(--muted); flex-shrink: 0; }
-  .option.selected .num { background: var(--accent); color: white; }
-  .option.correct .num { background: var(--green); color: white; }
-  .option.wrong .num { background: var(--red); color: white; }
-  .feedback { margin-top: 18px; padding: 16px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--bg3); }
-  .feedback.correct { border-color: rgba(34,197,94,0.5); background: rgba(34,197,94,0.08); }
-  .feedback.wrong { border-color: rgba(239,68,68,0.5); background: rgba(239,68,68,0.08); }
-  .feedback .verdict { font-weight: 800; font-size: 17px; margin-bottom: 8px; }
-  .feedback.correct .verdict { color: var(--green); }
-  .feedback.wrong .verdict { color: var(--red); }
-  .feedback .why { color: var(--text); font-size: 14px; line-height: 1.6; }
-  .feedback .why strong { color: var(--accent); }
-  .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
-  .stat { background: var(--bg3); border-radius: 12px; padding: 14px 10px; text-align: center; border: 1px solid var(--border); }
-  .stat .value { font-size: 24px; font-weight: 800; color: var(--accent); letter-spacing: -0.5px; }
-  .stat .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; font-weight: 600; }
-  table { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 16px; }
-  th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border); }
-  th { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+  .option.selected {
+    background: rgba(255, 181, 153, 0.12);
+    border-color: var(--primary);
+  }
+  .option.correct {
+    background: rgba(166, 212, 164, 0.15);
+    border-color: var(--success);
+  }
+  .option.wrong {
+    background: rgba(255, 180, 171, 0.15);
+    border-color: var(--error);
+  }
+  .option .num {
+    background: var(--surface-5);
+    color: var(--on-surface-var);
+    min-width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 500;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .option.selected .num { background: var(--primary); color: var(--on-primary); }
+  .option.correct .num { background: var(--success); color: #0d2b0d; }
+  .option.wrong .num { background: var(--error); color: var(--on-error); }
+  .option span:not(.num) { flex: 1; }
+  
+  .feedback {
+    margin-top: 16px;
+    padding: 16px;
+    border-radius: 16px;
+    background: var(--surface-3);
+  }
+  .feedback.correct { background: rgba(166, 212, 164, 0.10); }
+  .feedback.wrong { background: rgba(255, 180, 171, 0.10); }
+  .feedback .verdict {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .feedback.correct .verdict { color: var(--success); }
+  .feedback.wrong .verdict { color: var(--error); }
+  .feedback .why { font-size: 14.5px; line-height: 1.65; color: var(--on-surface-var); }
+  .feedback .why strong { color: var(--primary); font-weight: 500; }
+  
+  /* Sticky action bar */
+  .action-bar {
+    position: sticky;
+    bottom: calc(var(--navbar-h) + var(--safe-bottom) + 12px);
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    background: rgba(20, 18, 24, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    margin-top: 12px;
+    z-index: 50;
+    box-shadow: var(--elev-2);
+  }
+  .action-bar .btn { flex: 1; }
+  
+  /* ═══════════════════════════════════════════════════════════
+     NOTES VIEW
+     ═══════════════════════════════════════════════════════════ */
+  .notes-header {
+    background: var(--surface-2);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+  }
+  .notes-header .title { font-size: 20px; font-weight: 500; letter-spacing: 0; }
+  .notes-header .meta { font-size: 13px; color: var(--on-surface-var); margin-top: 6px; }
+  
+  .notes-content {
+    background: var(--surface-2);
+    border-radius: 16px;
+    padding: 24px 20px;
+    line-height: 1.75;
+    font-size: 16px;
+    color: var(--on-surface);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  .notes-content h1, .notes-content h2 {
+    font-size: 22px;
+    font-weight: 500;
+    margin: 24px 0 14px;
+    color: var(--primary);
+    letter-spacing: -0.3px;
+    line-height: 1.3;
+  }
+  .notes-content h1:first-child, .notes-content h2:first-child { margin-top: 0; }
+  .notes-content h3 {
+    font-size: 17px;
+    font-weight: 500;
+    margin: 20px 0 10px;
+    color: var(--on-surface);
+    letter-spacing: 0;
+  }
+  .notes-content h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 16px 0 8px;
+    color: var(--on-surface-var);
+  }
+  .notes-content p { margin: 0 0 14px; }
+  .notes-content ul, .notes-content ol { margin: 0 0 16px; padding-left: 24px; }
+  .notes-content li { margin-bottom: 8px; line-height: 1.6; }
+  .notes-content li::marker { color: var(--primary); }
+  .notes-content code {
+    background: var(--surface-4);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    color: var(--primary);
+  }
+  .notes-content strong { color: #fff; font-weight: 700; }
+  .notes-content em { color: var(--secondary); font-style: italic; }
+  .notes-content blockquote {
+    border-left: 4px solid var(--primary);
+    padding: 10px 16px;
+    margin: 14px 0;
+    color: var(--on-surface-var);
+    background: var(--surface-3);
+    border-radius: 0 12px 12px 0;
+    font-style: italic;
+  }
+  .notes-content hr {
+    border: none;
+    border-top: 1px solid var(--outline-var);
+    margin: 24px 0;
+  }
+  .notes-content a { color: var(--primary); text-decoration: underline; }
+  
+  /* ═══════════════════════════════════════════════════════════
+     STATS / REPORT
+     ═══════════════════════════════════════════════════════════ */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .stat {
+    background: var(--surface-3);
+    border-radius: 16px;
+    padding: 16px 12px;
+    text-align: center;
+  }
+  .stat .value {
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+  .stat .label {
+    font-size: 11px;
+    color: var(--on-surface-var);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-top: 6px;
+    font-weight: 500;
+  }
+  
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 12px 8px; border-bottom: 1px solid var(--outline-var); }
+  th {
+    color: var(--on-surface-var);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 500;
+  }
+  td { color: var(--on-surface); }
   tr:last-child td { border-bottom: none; }
-  .bar-visual { display: flex; height: 10px; border-radius: 5px; overflow: hidden; background: var(--bg3); margin: 12px 0; }
-  .bar-seg { height: 100%; }
-  .empty { text-align: center; padding: 60px 20px; color: var(--muted); }
-  .empty .icon { font-size: 52px; margin-bottom: 14px; opacity: 0.5; }
-  .empty p { margin-bottom: 6px; font-size: 15px; }
-  .empty .cta { margin-top: 20px; display: inline-block; }
-  .toast {
-    position: fixed; bottom: calc(var(--nav-h) + var(--safe-bottom) + 16px);
-    left: 16px; right: 16px; max-width: 480px; margin: 0 auto;
-    background: var(--bg3); color: var(--text); padding: 14px 18px;
-    border-radius: 12px; border: 1px solid var(--border);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-size: 14px; font-weight: 500;
-    z-index: 1000; opacity: 0; transform: translateY(20px);
-    transition: opacity 0.2s, transform 0.2s; pointer-events: none;
+  
+  .bar-visual {
+    display: flex;
+    height: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+    background: var(--surface-4);
+    margin: 14px 0;
   }
-  .toast.show { opacity: 1; transform: translateY(0); }
-  .toast.success { border-color: var(--green); }
-  .toast.error { border-color: var(--red); }
-  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 500; display: none; align-items: flex-end; justify-content: center; }
-  .modal.show { display: flex; }
-  .modal-sheet {
-    background: var(--bg2); width: 100%; max-width: 800px;
-    max-height: 88vh; border-radius: 20px 20px 0 0;
-    display: flex; flex-direction: column; padding-bottom: var(--safe-bottom);
-    animation: slideUp 0.2s ease-out; border: 1px solid var(--border); border-bottom: none;
+  .bar-seg { height: 100%; transition: width 0.4s; }
+  
+  /* Empty state */
+  .empty {
+    text-align: center;
+    padding: 72px 24px;
+    color: var(--on-surface-var);
   }
-  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-  .modal-header {
-    padding: 16px 20px; border-bottom: 1px solid var(--border);
-    display: flex; justify-content: space-between; align-items: center;
-    position: sticky; top: 0; background: var(--bg2);
-    border-radius: 20px 20px 0 0; z-index: 1;
-  }
-  .modal-header h3 { font-size: 16px; margin: 0; text-transform: none; letter-spacing: 0; color: var(--text); font-weight: 700; }
-  .modal-close { background: var(--bg3); border: 1px solid var(--border); color: var(--text); width: 36px; height: 36px; border-radius: 10px; cursor: pointer; font-size: 16px; }
-  .modal-body { overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
+  .empty .icon { font-size: 64px; margin-bottom: 16px; opacity: 0.4; }
+  .empty p { margin-bottom: 8px; font-size: 15px; line-height: 1.5; }
+  .empty .btn { margin-top: 24px; }
+  
+  /* Pack list */
   .pack-item {
-    background: var(--bg3); border: 1px solid var(--border);
-    border-radius: 12px; padding: 14px; margin-bottom: 10px;
+    background: var(--surface-3);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 10px;
+    transition: background 0.15s;
   }
-  .pack-item.active { background: rgba(249,115,22,0.1); border-color: var(--accent); }
-  .pack-item .name { font-weight: 700; font-size: 15px; word-break: break-word; }
-  .pack-item .info { font-size: 12px; color: var(--muted); margin-top: 4px; }
-  .pack-item .actions { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
-  .pack-item .actions button { padding: 6px 12px; min-height: 34px; font-size: 12px; }
-  details { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-top: 12px; font-size: 13px; }
-  details summary { cursor: pointer; color: var(--muted); font-weight: 600; min-height: 24px; padding: 4px 0; }
-  details pre { margin-top: 12px; padding: 12px; background: var(--bg2); border-radius: 8px; overflow-x: auto; font-size: 12px; line-height: 1.5; color: var(--text); -webkit-overflow-scrolling: touch; }
-  code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+  .pack-item.active {
+    background: var(--secondary-container);
+    border: 1px solid var(--primary);
+  }
+  .pack-item .name {
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--on-surface);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    word-break: break-word;
+  }
+  .pack-item.active .name { color: var(--on-secondary-container); }
+  .pack-item .info {
+    font-size: 13px;
+    color: var(--on-surface-var);
+    margin-top: 6px;
+  }
+  .pack-item.active .info { color: var(--on-secondary-container); opacity: 0.8; }
+  .pack-item .actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .pack-item .actions .btn {
+    padding: 0 14px;
+    min-height: 36px;
+    font-size: 13px;
+    border-radius: 100px;
+  }
+  
+  /* Details */
+  details {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-top: 14px;
+    font-size: 13px;
+  }
+  details summary {
+    cursor: pointer;
+    color: var(--on-surface-var);
+    font-weight: 500;
+    padding: 4px 0;
+    min-height: 24px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  details summary::before { content: "▶"; font-size: 10px; transition: transform 0.2s; }
+  details[open] summary::before { transform: rotate(90deg); }
+  details pre {
+    margin-top: 12px;
+    padding: 14px;
+    background: var(--surface-3);
+    border-radius: 10px;
+    overflow-x: auto;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--on-surface-var);
+    -webkit-overflow-scrolling: touch;
+  }
+  code {
+    background: var(--surface-4);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: 'Roboto Mono', monospace;
+    color: var(--primary);
+  }
+  
+  /* Install banner */
   .install-banner { display: none; }
   .install-banner.show { display: flex; }
+  .banner {
+    background: var(--primary-container);
+    color: var(--on-primary-container);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .banner .banner-icon { font-size: 24px; flex-shrink: 0; }
+  .banner strong { font-weight: 700; }
+  .banner .btn {
+    margin-top: 10px;
+    min-height: 36px;
+    padding: 0 16px;
+    font-size: 13px;
+    background: var(--on-primary-container);
+    color: var(--primary-container);
+  }
+  
+  /* Desktop fallback */
   @media (min-width: 700px) {
-    nav.top-nav { display: flex; }
-    nav.bottom-nav { display: none; }
-    main { padding-bottom: 40px; padding-left: 24px; padding-right: 24px; }
-    .row > * { flex: 0 1 auto; min-width: 0; }
+    main { padding-bottom: 32px; }
+    .bottom-nav { display: none; }
+    .fab { bottom: 24px; }
+    .action-bar, .snackbar { bottom: 24px; }
     .stat-grid { grid-template-columns: repeat(5, 1fr); }
-    .study-footer, .quiz-actions { bottom: 16px; }
-    .toast { bottom: 24px; }
-    button.primary, button.secondary { width: auto; min-width: 140px; }
-    .modal { align-items: center; padding: 20px; }
-    .modal-sheet { border-radius: 20px; max-height: 85vh; }
+    .btn { min-height: 40px; }
   }
-  @media (max-width: 380px) {
-    .stat .value { font-size: 22px; }
-    .question-text { font-size: 16px; }
-    .option { font-size: 14.5px; padding: 12px 14px; }
+  @media (min-width: 700px) {
+    /* Show desktop top nav */
+    .bottom-nav { display: none; }
+    .appbar-actions .desktop-nav { display: flex; gap: 4px; }
   }
-  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+  @media (max-width: 699px) {
+    .desktop-nav { display: none; }
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">AZExams</div>
-  <div class="header-actions">
-    <button id="folderBtn" title="Save folder">📁</button>
-    <button id="packBtn" title="Packs">📦</button>
-    <nav class="top-nav">
-      <button data-tab="home" class="active">Home</button>
-      <button data-tab="study">Study</button>
-      <button data-tab="quiz">Quiz</button>
-      <button data-tab="report">Report</button>
-      <button data-tab="bank">Bank</button>
+<!-- ═══════════════ TOP APP BAR ═══════════════ -->
+<header class="appbar">
+  <div class="appbar-title">
+    <div class="brand-icon">AZ</div>
+    <span>AZExams</span>
+  </div>
+  <div class="appbar-actions">
+    <nav class="desktop-nav">
+      <button class="icon-btn" data-tab="home" title="Home">🏠</button>
+      <button class="icon-btn" data-tab="study" title="Study">📖</button>
+      <button class="icon-btn" data-tab="quiz" title="Quiz">📝</button>
+      <button class="icon-btn" data-tab="report" title="Report">📊</button>
+      <button class="icon-btn" data-tab="bank" title="Bank">📚</button>
     </nav>
+    <button class="icon-btn ripple" id="packBtn" title="Packs">📦</button>
   </div>
 </header>
 
 <main>
 
-  <!-- HOME -->
-  <section id="home" class="active">
+  <!-- ═══════════════ HOME ═══════════════ -->
+  <section id="home" class="section active">
     <div class="banner install-banner" id="installBanner">
-      <span class="icon">📲</span>
-      <div style="flex:1;">
+      <span class="banner-icon">📲</span>
+      <div style="flex: 1;">
         <strong>Install AZExams</strong><br>
-        Add to home screen for full-screen, offline access.
-        <button class="ghost" id="installBtn" style="margin-top: 8px; padding: 6px 14px; min-height: 34px;">Install</button>
+        Add to home screen for a real app experience.
+        <br>
+        <button class="btn ripple" id="installBtn">Install</button>
       </div>
     </div>
     
     <div class="card">
-      <h2>Storage</h2>
-      <p class="sub" id="storageStatus">Checking storage...</p>
-      <div class="row" id="storageActions">
-        <button class="secondary" id="pickFolderBtn">📁 Choose Save Folder</button>
-        <button class="secondary" id="reloadFolderBtn" style="display:none;">🔄 Reload from Folder</button>
+      <h2 class="card-title">Storage</h2>
+      <p class="card-sub" id="storageStatus">Checking storage...</p>
+      <div class="row-buttons" id="storageActions" style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="btn btn-outlined ripple" id="pickFolderBtn">📁 Choose folder</button>
+        <button class="btn btn-outlined ripple" id="reloadFolderBtn" style="display: none;">🔄 Reload</button>
       </div>
-      <p class="field-hint" style="margin-top: 12px;">
-        Save folder = all packs stored as real <code>.json</code> files on your device.
-        Unlimited storage, survives browser reset, no server.
+      <p style="margin-top: 14px; font-size: 13px; color: var(--on-surface-var); line-height: 1.5;">
+        Save folder = each pack stored as a real <code>.json</code> file. Unlimited storage, survives browser reset.
       </p>
     </div>
     
     <div class="card">
-      <h2>Load Notes</h2>
-      <p class="sub">Paste markdown notes from any AI. They'll save with the active pack.</p>
-      <label class="field-label">📖 Notes (Markdown)</label>
-      <textarea id="notesInput" class="notes-area" autocapitalize="sentences" placeholder="# Polity — Fundamental Rights
-
-## Article 17
-- **Abolishes untouchability**
-- Forbids its practice in any form"></textarea>
-      <label class="field-label" style="margin-top: 20px;">Topic / Exam (optional)</label>
-      <textarea id="notesTopicInput" style="min-height: 46px; height: 46px; padding: 12px 14px; resize: none;" autocapitalize="sentences" placeholder="e.g. Polity · SSC CGL"></textarea>
-      <div class="row tight">
-        <button class="secondary" id="loadNotesBtn">Load Notes</button>
+      <h2 class="card-title">Load notes</h2>
+      <p class="card-sub">Paste markdown notes from any AI.</p>
+      
+      <div class="m3-field">
+        <textarea id="notesInput" class="notes-input" autocapitalize="sentences" placeholder=" "></textarea>
+        <label>Notes (markdown)</label>
       </div>
+      
+      <div class="m3-field">
+        <textarea id="notesTopicInput" style="min-height: 56px; height: 56px; padding-top: 22px; resize: none;" autocapitalize="sentences" placeholder=" "></textarea>
+        <label>Topic · Exam (optional)</label>
+      </div>
+      
+      <button class="btn btn-tonal ripple btn-block" id="loadNotesBtn">Load notes</button>
     </div>
     
     <div class="card">
-      <h2>Load Questions</h2>
-      <p class="sub">Paste JSON. Include a <code>notes</code> field to load notes together.</p>
-      <textarea id="jsonInput" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder='{
-  "exam": "SSC CGL",
-  "topic": "Polity",
-  "notes": "# Polity Notes...",
-  "default_time_sec": 45,
-  "questions": [
-    {
-      "type": "MCQ",
-      "subtopic": "Fundamental Rights",
-      "difficulty": "medium",
-      "question": "Which Article abolishes untouchability?",
-      "correct": ["Article 17"],
-      "distractors": ["Article 14", "Article 15", "Article 19", "Article 21"],
-      "explanation": "Article 17 abolishes untouchability."
-    }
-  ]
-}'></textarea>
-      <div class="row">
-        <button class="primary" id="loadBtn">Load JSON</button>
-        <button class="secondary" id="startBtn">Start Quiz →</button>
+      <h2 class="card-title">Load questions</h2>
+      <p class="card-sub">Paste JSON. Include <code>notes</code> field to load notes at the same time.</p>
+      
+      <div class="m3-field">
+        <textarea id="jsonInput" autocapitalize="off" autocorrect="off" spellcheck="false" style="min-height: 200px;" placeholder=" "></textarea>
+        <label>JSON</label>
+      </div>
+      
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="btn btn-filled ripple" id="loadBtn" style="flex: 1;">Load JSON</button>
+        <button class="btn btn-outlined ripple" id="startBtn" style="flex: 1;">Start quiz →</button>
       </div>
     </div>
     
-    <div class="card" id="sessionCard" style="display:none;">
-      <h2>Active Pack: <span id="activePackName" style="color: var(--accent);">—</span></h2>
-      <div class="stat-grid" style="grid-template-columns: repeat(2, 1fr);">
+    <div class="card" id="sessionCard" style="display: none;">
+      <h2 class="card-title" id="activePackTitle">Active: My First Pack</h2>
+      <div class="stat-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 0;">
         <div class="stat"><div class="value" id="sessionTotal">0</div><div class="label">Questions</div></div>
-        <div class="stat"><div class="value" id="sessionNotes">0</div><div class="label">Note Sets</div></div>
+        <div class="stat"><div class="value" id="sessionNotes">0</div><div class="label">Notes</div></div>
         <div class="stat"><div class="value" id="sessionCorrect">0</div><div class="label">Correct</div></div>
         <div class="stat"><div class="value" id="sessionWeak">0</div><div class="label">Weak</div></div>
       </div>
     </div>
   </section>
 
-  <!-- STUDY -->
-  <section id="study">
+  <!-- ═══════════════ STUDY ═══════════════ -->
+  <section id="study" class="section">
     <div id="studyEmpty" class="empty">
       <div class="icon">📖</div>
       <p>No notes yet.</p>
-      <p>Paste notes on Home to start.</p>
-      <button class="primary cta" id="studyGoHome">Go to Home</button>
+      <p>Paste notes on Home to start studying.</p>
+      <button class="btn btn-filled ripple" onclick="switchTab('home')">Go to Home</button>
     </div>
-    <div id="studyActive" style="display:none;">
-      <div class="chips" id="notesChips"></div>
+    <div id="studyActive" style="display: none;">
+      <div class="chip-row" id="notesChips"></div>
       <div class="notes-header">
         <div class="title" id="noteTitle">—</div>
         <div class="meta" id="noteMeta">—</div>
       </div>
       <div class="notes-content" id="notesContent"></div>
-      <div class="study-footer">
-        <button class="primary" id="startQuizFromNotes">Start Quiz →</button>
-        <button class="ghost" id="deleteNoteBtn" style="flex: 0 0 auto; min-width: 80px;">🗑</button>
+      <div class="action-bar" style="margin-top: 16px;">
+        <button class="btn btn-filled ripple" id="startQuizFromNotes" style="flex: 2;">Start quiz</button>
+        <button class="btn btn-error ripple" id="deleteNoteBtn" style="flex: 1;">Delete</button>
       </div>
     </div>
   </section>
 
-  <!-- QUIZ -->
-  <section id="quiz">
+  <!-- ═══════════════ QUIZ ═══════════════ -->
+  <section id="quiz" class="section">
     <div id="quizEmpty" class="empty">
       <div class="icon">📚</div>
       <p>No questions loaded yet.</p>
-      <button class="primary cta" id="quizGoHome">Go to Home</button>
+      <p>Paste JSON on Home to begin.</p>
+      <button class="btn btn-filled ripple" onclick="switchTab('home')">Go to Home</button>
     </div>
-    <div id="quizActive" style="display:none;">
-      <div class="quiz-shell">
-        <div class="quiz-topbar">
-          <div class="progress-inline">
-            <span class="stat-mini c">✅ <span id="pbCorrect">0</span></span>
-            <span class="stat-mini w">❌ <span id="pbWrong">0</span></span>
-            <span class="stat-mini"><span id="pbPct">0</span>%</span>
-          </div>
-          <div class="topbar-actions">
-            <button class="peek-btn" id="peekBtn" title="Notes">📖</button>
-            <div class="timer-badge" id="qTimerBadge">⏱ <span id="qTimer">45</span>s</div>
-          </div>
+    <div id="quizActive" style="display: none;">
+      <div class="quiz-topbar">
+        <div class="progress-inline">
+          <span class="c">✅ <span id="pbCorrect">0</span></span>
+          <span class="w">❌ <span id="pbWrong">0</span></span>
+          <span><span id="pbPct">0</span>%</span>
         </div>
-        <div class="quiz-card">
-          <div class="quiz-meta">
-            <span class="pill" id="qTopic">Topic</span>
-            <span class="pill" id="qSubtopic">Subtopic</span>
-            <span class="pill" id="qDiff">medium</span>
-            <span class="pill" id="qType">MCQ</span>
-            <span class="pill weak" id="qWeakFlag" style="display:none;">WEAK</span>
-          </div>
-          <div class="timer-bar"><div class="timer-fill" id="timerFill" style="width:100%"></div></div>
-          <div class="question-text" id="qText">—</div>
-          <div class="options" id="options"></div>
-          <div id="feedback" class="feedback" style="display:none;"></div>
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <button class="icon-btn ripple" id="peekBtn" title="Notes">📖</button>
+          <div class="timer-badge" id="qTimerBadge">⏱ <span id="qTimer">45</span>s</div>
         </div>
-        <div class="quiz-actions">
-          <button class="primary" id="submitBtn" disabled>Submit</button>
-          <button class="secondary" id="skipBtn">Skip</button>
-          <button class="primary" id="nextBtn" style="display:none;">Next →</button>
+      </div>
+      <div class="question-card">
+        <div class="meta-row">
+          <span class="pill" id="qTopic">Topic</span>
+          <span class="pill" id="qSubtopic">Subtopic</span>
+          <span class="pill" id="qDiff">medium</span>
+          <span class="pill" id="qType">MCQ</span>
+          <span class="pill weak" id="qWeakFlag" style="display: none;">WEAK</span>
         </div>
+        <div class="timer-track"><div class="timer-fill" id="timerFill" style="width: 100%"></div></div>
+        <div class="question-text" id="qText">—</div>
+        <div class="options" id="options"></div>
+        <div id="feedback" class="feedback" style="display: none;"></div>
+      </div>
+      <div class="action-bar">
+        <button class="btn btn-filled ripple" id="submitBtn" disabled>Submit</button>
+        <button class="btn btn-outlined ripple" id="skipBtn">Skip</button>
+        <button class="btn btn-filled ripple" id="nextBtn" style="display: none;">Next →</button>
       </div>
     </div>
   </section>
 
-  <!-- REPORT -->
-  <section id="report">
+  <!-- ═══════════════ REPORT ═══════════════ -->
+  <section id="report" class="section">
     <div id="reportEmpty" class="empty">
       <div class="icon">📊</div>
       <p>No data yet.</p>
+      <p>Answer questions to see your report.</p>
     </div>
-    <div id="reportContent" style="display:none;"></div>
+    <div id="reportContent" style="display: none;"></div>
   </section>
 
-  <!-- BANK -->
-  <section id="bank">
+  <!-- ═══════════════ BANK ═══════════════ -->
+  <section id="bank" class="section">
     <div class="card">
-      <h2>Library</h2>
-      <p class="sub" id="bankSummary">—</p>
-      <div class="row">
-        <button class="secondary" id="exportBtn">Export Backup</button>
-        <button class="danger" id="resetStateBtn">Reset Progress</button>
+      <h2 class="card-title">Library</h2>
+      <p class="card-sub" id="bankSummary">Nothing loaded yet</p>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="btn btn-outlined ripple" id="exportBtn">Export</button>
+        <button class="btn btn-error ripple" id="resetStateBtn">Reset progress</button>
       </div>
     </div>
     <div id="notesList"></div>
@@ -489,73 +1201,96 @@
 
 </main>
 
+<!-- ═══════════════ BOTTOM NAV ═══════════════ -->
 <nav class="bottom-nav">
-  <button data-tab="home" class="active"><span class="icon">🏠</span>Home</button>
-  <button data-tab="study"><span class="icon">📖</span>Study</button>
-  <button data-tab="quiz"><span class="icon">📝</span>Quiz</button>
-  <button data-tab="report"><span class="icon">📊</span>Report</button>
-  <button data-tab="bank"><span class="icon">📚</span>Bank</button>
+  <button class="nav-item active" data-tab="home">
+    <div class="icon-wrapper"><span class="icon">🏠</span></div>
+    <span class="label">Home</span>
+  </button>
+  <button class="nav-item" data-tab="study">
+    <div class="icon-wrapper"><span class="icon">📖</span></div>
+    <span class="label">Study</span>
+  </button>
+  <button class="nav-item" data-tab="quiz">
+    <div class="icon-wrapper"><span class="icon">📝</span></div>
+    <span class="label">Quiz</span>
+  </button>
+  <button class="nav-item" data-tab="report">
+    <div class="icon-wrapper"><span class="icon">📊</span></div>
+    <span class="label">Report</span>
+  </button>
+  <button class="nav-item" data-tab="bank">
+    <div class="icon-wrapper"><span class="icon">📚</span></div>
+    <span class="label">Bank</span>
+  </button>
 </nav>
 
-<!-- PACK MODAL -->
-<div class="modal" id="packModal">
-  <div class="modal-sheet">
-    <div class="modal-header">
-      <h3>📦 Packs</h3>
-      <button class="modal-close" id="packModalClose">✕</button>
-    </div>
-    <div class="modal-body">
-      <p style="color: var(--muted); font-size: 14px; margin-bottom: 16px;">
-        Each pack = separate notes + questions + progress. Saved as <code>.json</code> files in your folder.
-      </p>
-      <div id="packList"></div>
-      <button class="primary" id="newPackBtn" style="margin-top: 16px;">+ Create New Pack</button>
-    </div>
+<!-- ═══════════════ FAB ═══════════════ -->
+<button class="fab ripple hidden" id="fabBtn" title="Start quiz">▶</button>
+
+<!-- ═══════════════ SCRIM ═══════════════ -->
+<div class="scrim" id="scrim"></div>
+
+<!-- ═══════════════ PACKS SHEET ═══════════════ -->
+<div class="sheet" id="packSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <div class="sheet-title">📦 Packs</div>
+    <button class="icon-btn ripple" data-close="packSheet">✕</button>
+  </div>
+  <div class="sheet-body">
+    <p style="color: var(--on-surface-var); font-size: 14px; margin-bottom: 16px; line-height: 1.5;">
+      Each pack = separate notes, questions, and progress. Saved as a <code>.json</code> file in your chosen folder.
+    </p>
+    <div id="packList"></div>
+    <button class="btn btn-filled ripple btn-block" id="newPackBtn" style="margin-top: 16px;">+ Create new pack</button>
   </div>
 </div>
 
-<!-- NOTES MODAL -->
-<div class="modal" id="notesModal">
-  <div class="modal-sheet">
-    <div class="modal-header">
-      <h3 id="modalTitle">📖 Notes</h3>
-      <button class="modal-close" id="modalClose">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="notes-content" id="modalContent"></div>
-    </div>
+<!-- ═══════════════ NOTES SHEET ═══════════════ -->
+<div class="sheet" id="notesSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <div class="sheet-title" id="modalTitle">📖 Notes</div>
+    <button class="icon-btn ripple" data-close="notesSheet">✕</button>
+  </div>
+  <div class="sheet-body">
+    <div class="notes-content" id="modalContent" style="padding: 0; background: transparent;"></div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- ═══════════════ SNACKBAR ═══════════════ -->
+<div class="snackbar" id="snackbar">
+  <span class="snack-icon" id="snackIcon"></span>
+  <span id="snackMsg"></span>
+</div>
 
 <script>
-// ═══════════════════════════════════════════════════════════════
-// CONSTANTS
-// ═══════════════════════════════════════════════════════════════
-const SETTINGS_KEY = 'azexams_settings_v1';
+/* ═══════════════════════════════════════════════════════════════
+   CONSTANTS
+   ═══════════════════════════════════════════════════════════════ */
 const LAST_PACK_KEY = 'azexams_last_pack';
 const IDB_HANDLE_KEY = 'packsDir';
 const IDB_NAME = 'azexams_handles';
 const IDB_STORE = 'handles';
-
 const supportsFSA = 'showDirectoryPicker' in window;
 
-// ═══════════════════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════════════════
-let packs = {};              // {id: pack}
+/* ═══════════════════════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════════════════════ */
+let packs = {};
 let currentPackId = null;
-let state = null;            // alias to packs[currentPackId]
+let state = null;
 let dirHandle = null;
 let current = null;
 let timer = null;
 let timeLeft = 0;
 let deferredInstall = null;
+let tabHistory = ['home'];
 
-// ═══════════════════════════════════════════════════════════════
-// INDEXEDDB (just for storing folder handle)
-// ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   INDEXEDDB (folder handle persistence)
+   ═══════════════════════════════════════════════════════════════ */
 function idbOpen() {
   return new Promise((res, rej) => {
     const req = indexedDB.open(IDB_NAME, 1);
@@ -572,7 +1307,8 @@ async function idbSet(key, val) {
   return new Promise((res, rej) => {
     const tx = db.transaction(IDB_STORE, 'readwrite');
     tx.objectStore(IDB_STORE).put(val, key);
-    tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+    tx.oncomplete = res;
+    tx.onerror = () => rej(tx.error);
   });
 }
 async function idbGet(key) {
@@ -585,24 +1321,27 @@ async function idbGet(key) {
   });
 }
 
-// ═══════════════════════════════════════════════════════════════
-// FILE SYSTEM ACCESS
-// ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   FILE SYSTEM ACCESS
+   ═══════════════════════════════════════════════════════════════ */
 function sanitizeFilename(s) {
   return s.replace(/[^a-z0-9_\- ]/gi, '_').trim().slice(0, 80) || 'pack';
 }
 
 async function pickFolder() {
-  if (!supportsFSA) { toast('Your browser does not support folder access', 'error'); return; }
+  if (!supportsFSA) {
+    snack('Your browser does not support folder access', 'error');
+    return;
+  }
   try {
     const handle = await window.showDirectoryPicker({ mode: 'readwrite', id: 'azexams' });
     dirHandle = handle;
     await idbSet(IDB_HANDLE_KEY, handle);
-    toast('📁 Folder set — packs will save there', 'success');
+    snack('📁 Folder set — packs will save there', 'success');
     await syncAllPacksToDisk();
     updateStorageStatus();
   } catch (e) {
-    if (e.name !== 'AbortError') toast('Folder selection cancelled', 'error');
+    if (e.name !== 'AbortError') snack('Folder selection cancelled', 'error');
   }
 }
 
@@ -620,13 +1359,10 @@ async function loadPacksFromDisk() {
   const result = {};
   try {
     for await (const entry of dirHandle.values()) {
-      if (entry.kind !== 'file') continue;
-      if (!entry.name.endsWith('.json')) continue;
-      if (entry.name.startsWith('_')) continue;
+      if (entry.kind !== 'file' || !entry.name.endsWith('.json') || entry.name.startsWith('_')) continue;
       try {
         const file = await entry.getFile();
-        const text = await file.text();
-        const pack = JSON.parse(text);
+        const pack = JSON.parse(await file.text());
         if (pack && pack.id && pack.name) result[pack.id] = pack;
       } catch (err) { console.error('Load failed', entry.name, err); }
     }
@@ -639,8 +1375,8 @@ async function savePackToDisk(pack) {
   if (!await ensurePermission(dirHandle, false)) return false;
   try {
     const name = sanitizeFilename(pack.name) + '.json';
-    const fileHandle = await dirHandle.getFileHandle(name, { create: true });
-    const w = await fileHandle.createWritable();
+    const fh = await dirHandle.getFileHandle(name, { create: true });
+    const w = await fh.createWritable();
     await w.write(JSON.stringify(pack, null, 2));
     await w.close();
     return true;
@@ -649,22 +1385,19 @@ async function savePackToDisk(pack) {
 
 async function syncAllPacksToDisk() {
   if (!dirHandle) return;
-  for (const pack of Object.values(packs)) {
-    await savePackToDisk(pack);
-  }
+  for (const pack of Object.values(packs)) await savePackToDisk(pack);
 }
 
 async function deletePackFromDisk(pack) {
   if (!dirHandle) return;
   if (!await ensurePermission(dirHandle, false)) return;
-  try {
-    await dirHandle.removeEntry(sanitizeFilename(pack.name) + '.json');
-  } catch (e) { /* file may not exist */ }
+  try { await dirHandle.removeEntry(sanitizeFilename(pack.name) + '.json'); }
+  catch (e) { /* file may not exist */ }
 }
 
-// ═══════════════════════════════════════════════════════════════
-// PACK MANAGEMENT
-// ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   PACK MANAGEMENT
+   ═══════════════════════════════════════════════════════════════ */
 function freshMeta() {
   return {
     shown: 0, correct: 0, wrong: 0,
@@ -705,7 +1438,7 @@ function persist() {
   if (!state) return;
   state.updatedAt = Date.now();
   packs[currentPackId] = state;
-  savePackToDisk(state);  // async, fire-and-forget
+  savePackToDisk(state);
 }
 
 function createPack(name) {
@@ -714,7 +1447,7 @@ function createPack(name) {
   setActivePack(p.id);
   persist();
   refreshAllViews();
-  toast(`📦 Created "${p.name}"`, 'success');
+  snack(`📦 Created "${p.name}"`, 'success');
 }
 
 function switchPack(id) {
@@ -722,22 +1455,19 @@ function switchPack(id) {
   setActivePack(id);
   savePackToDisk(state);
   refreshAllViews();
-  toast(`📦 Switched to "${state.name}"`, 'success');
+  snack(`📦 Switched to "${state.name}"`, 'success');
 }
 
 function deletePack(id) {
-  if (Object.keys(packs).length <= 1) { toast('Cannot delete the only pack', 'error'); return; }
+  if (Object.keys(packs).length <= 1) { snack('Cannot delete the only pack', 'error'); return; }
   const p = packs[id];
   if (!confirm(`Delete pack "${p.name}"? Cannot be undone.`)) return;
   deletePackFromDisk(p);
   delete packs[id];
-  if (id === currentPackId) {
-    const newId = Object.keys(packs)[0];
-    setActivePack(newId);
-  }
+  if (id === currentPackId) setActivePack(Object.keys(packs)[0]);
   refreshAllViews();
   renderPackList();
-  toast('Pack deleted', 'success');
+  snack('Pack deleted', 'success');
 }
 
 function duplicatePack(id) {
@@ -746,17 +1476,14 @@ function duplicatePack(id) {
   const clone = JSON.parse(JSON.stringify(p));
   clone.id = 'pack_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
   clone.name = clone.name + ' (copy)';
-  clone.createdAt = Date.now();
-  clone.updatedAt = Date.now();
-  for (const q of clone.bank || []) {
-    if (clone.meta[q._id]) clone.meta[q._id] = freshMeta();
-  }
+  clone.createdAt = clone.updatedAt = Date.now();
+  for (const q of clone.bank || []) if (clone.meta[q._id]) clone.meta[q._id] = freshMeta();
   clone.session = { correct: 0, wrong: 0, started: Date.now() };
   clone.position = 0;
   packs[clone.id] = clone;
   savePackToDisk(clone);
   renderPackList();
-  toast('Pack duplicated', 'success');
+  snack('Pack duplicated', 'success');
 }
 
 function renamePack(id, newName) {
@@ -764,19 +1491,18 @@ function renamePack(id, newName) {
   if (!p) return;
   const oldName = p.name;
   p.name = newName;
-  // Save new file, optionally remove old
   savePackToDisk(p);
-  if (oldName !== newName) {
-    dirHandle?.removeEntry(sanitizeFilename(oldName) + '.json').catch(() => {});
+  if (oldName !== newName && dirHandle) {
+    dirHandle.removeEntry(sanitizeFilename(oldName) + '.json').catch(() => {});
   }
   if (id === currentPackId) state.name = newName;
   renderPackList();
   refreshAllViews();
 }
 
-// ═══════════════════════════════════════════════════════════════
-// UTILITIES
-// ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   UTILITIES
+   ═══════════════════════════════════════════════════════════════ */
 function shuffle(arr) {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -794,25 +1520,50 @@ function qid(q) { return q._id || hash(q.question + '|' + (q.subtopic || '')); }
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-function toast(msg, type='') {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'toast show ' + type;
-  clearTimeout(el._t);
-  el._t = setTimeout(() => el.className = 'toast ' + type, 2400);
+
+/* Snackbar (Material 3) */
+let snackTimer = null;
+function snack(msg, type = '') {
+  const el = document.getElementById('snackbar');
+  document.getElementById('snackIcon').textContent = type === 'success' ? '✓' : type === 'error' ? '⚠' : '';
+  document.getElementById('snackMsg').textContent = msg;
+  el.className = 'snackbar show ' + type;
+  clearTimeout(snackTimer);
+  snackTimer = setTimeout(() => el.className = 'snackbar ' + type, 2600);
 }
 
-// ═══════════════════════════════════════════════════════════════
-// MARKDOWN
-// ═══════════════════════════════════════════════════════════════
+/* Ripple effect */
+function attachRipples() {
+  document.querySelectorAll('.ripple').forEach(el => {
+    if (el._rippled) return;
+    el._rippled = true;
+    el.addEventListener('pointerdown', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const size = Math.max(rect.width, rect.height);
+      const rp = document.createElement('span');
+      rp.className = 'rp';
+      rp.style.width = rp.style.height = size + 'px';
+      rp.style.left = (x - size / 2) + 'px';
+      rp.style.top = (y - size / 2) + 'px';
+      el.appendChild(rp);
+      setTimeout(() => rp.remove(), 650);
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MARKDOWN
+   ═══════════════════════════════════════════════════════════════ */
 function inlineMd(text) {
   text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   text = text.replace(/__(.+?)__/g, '<strong>$1</strong>');
   text = text.replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>');
-  text = text.replace(/(?<!_)_(?!_)(.+?)(?<!_)_(?!_)/g, '<em>$1</em>');
   text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
   return text;
 }
+
 function renderMarkdown(text) {
   if (!text) return '';
   let src = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -847,28 +1598,23 @@ function renderMarkdown(text) {
   return out.join('\n');
 }
 
-// ═══════════════════════════════════════════════════════════════
-// NOTES
-// ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   NOTES
+   ═══════════════════════════════════════════════════════════════ */
 function saveNote(topic, exam, content) {
   if (!content || !content.trim()) return null;
   const t = (topic || 'Untitled').trim();
   const e = (exam || '').trim();
   const id = hash(t + '|' + e);
   let note = state.notes.find(n => n.id === id);
-  if (note) {
-    note.content = content;
-    note.addedAt = Date.now();
-  } else {
-    note = { id, topic: t, exam: e, content, addedAt: Date.now() };
-    state.notes.push(note);
-  }
+  if (note) { note.content = content; note.addedAt = Date.now(); }
+  else { note = { id, topic: t, exam: e, content, addedAt: Date.now() }; state.notes.push(note); }
   return note;
 }
 
 function loadNotesOnly() {
   const content = document.getElementById('notesInput').value.trim();
-  if (!content) { toast('Paste notes first', 'error'); return; }
+  if (!content) { snack('Paste notes first', 'error'); return; }
   const topicRaw = document.getElementById('notesTopicInput').value.trim();
   let topic = topicRaw, exam = '';
   if (topicRaw.includes('·')) {
@@ -877,12 +1623,15 @@ function loadNotesOnly() {
     exam = parts[1] || '';
   }
   const note = saveNote(topic, exam, content);
-  if (!note) { toast('Invalid note', 'error'); return; }
+  if (!note) { snack('Invalid note', 'error'); return; }
   state.activeNoteId = note.id;
   persist();
   document.getElementById('notesInput').value = '';
   document.getElementById('notesTopicInput').value = '';
-  toast(`✅ Notes loaded: "${note.topic}"`, 'success');
+  document.querySelectorAll('.m3-field').forEach(f => {
+    f.classList.toggle('filled', f.querySelector('textarea, input')?.value.length > 0);
+  });
+  snack(`✅ Notes loaded: "${note.topic}"`, 'success');
   updateHomeStats();
   renderBank();
   renderNotesChips();
@@ -897,21 +1646,19 @@ function deleteNote(id) {
   renderStudy();
   renderBank();
   updateHomeStats();
-  toast('Note deleted', 'success');
+  snack('Note deleted', 'success');
 }
 
-// ═══════════════════════════════════════════════════════════════
-// JSON LOADING
-// ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   JSON LOADING
+   ═══════════════════════════════════════════════════════════════ */
 function loadJSON() {
   const raw = document.getElementById('jsonInput').value.trim();
-  if (!raw) { toast('Paste JSON first', 'error'); return; }
+  if (!raw) { snack('Paste JSON first', 'error'); return; }
   let data;
-  try { data = JSON.parse(raw); } catch (e) { toast('Invalid JSON: ' + e.message, 'error'); return; }
-  
+  try { data = JSON.parse(raw); } catch (e) { snack('Invalid JSON: ' + e.message, 'error'); return; }
   let questions = [], defaultTime = state.settings.default_time_sec;
   let topTopic = 'General', topExam = '', notesContent = null;
-  
   if (Array.isArray(data)) questions = data;
   else if (data && Array.isArray(data.questions)) {
     questions = data.questions;
@@ -919,7 +1666,7 @@ function loadJSON() {
     if (data.topic) topTopic = data.topic;
     if (data.exam) topExam = data.exam;
     if (data.notes) notesContent = String(data.notes);
-  } else { toast('JSON must be array or have "questions"', 'error'); return; }
+  } else { snack('JSON must be array or have "questions"', 'error'); return; }
   
   let noteLoaded = false;
   if (notesContent) {
@@ -951,16 +1698,19 @@ function loadJSON() {
   }
   for (const q of state.bank) if (!state.meta[q._id]) state.meta[q._id] = freshMeta();
   persist();
-  toast(`Loaded +${added} new · ${skipped} dup · ${invalid} invalid${noteLoaded ? ' · notes' : ''}`, 'success');
+  snack(`+${added} new · ${skipped} dup · ${invalid} invalid${noteLoaded ? ' · notes' : ''}`, 'success');
   document.getElementById('jsonInput').value = '';
+  document.querySelectorAll('.m3-field').forEach(f => {
+    f.classList.toggle('filled', f.querySelector('textarea, input')?.value.length > 0);
+  });
   updateHomeStats();
   renderBank();
   renderNotesChips();
 }
 
-// ═══════════════════════════════════════════════════════════════
-// ADAPTIVE ENGINE
-// ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   ADAPTIVE ENGINE
+   ═══════════════════════════════════════════════════════════════ */
 function pickNextQuestion() {
   const pos = state.position;
   if (state.preferSubtopic) {
@@ -996,9 +1746,8 @@ function rotateOptions(q) {
     return { options, correctIndices: q.correct.map(c => options.indexOf(c)).filter(i => i >= 0) };
   }
   const pool = q.distractors.filter(d => !m.seenDistractors.includes(d));
-  const fallback = q.distractors;
   const needWrong = q.type === 'MSQ' ? 2 + Math.floor(Math.random() * 2) : 3;
-  const source = pool.length >= needWrong ? pool : fallback;
+  const source = pool.length >= needWrong ? pool : q.distractors;
   const chosenWrong = shuffle(source).slice(0, Math.min(needWrong, source.length));
   m.seenDistractors = [...chosenWrong, ...m.seenDistractors].slice(0, 5);
   let options = shuffle([...q.correct, ...chosenWrong]);
@@ -1031,11 +1780,11 @@ function recordAnswer(q, isCorrect, rating) {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════
-// QUIZ
-// ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   QUIZ
+   ═══════════════════════════════════════════════════════════════ */
 function startQuiz() {
-  if (!state.bank.length) { toast('Load questions first', 'error'); return; }
+  if (!state.bank.length) { snack('Load questions first', 'error'); return; }
   switchTab('quiz');
   serveNext();
 }
@@ -1047,7 +1796,7 @@ function serveNext() {
     document.getElementById('quizActive').style.display = 'none';
     const empty = document.getElementById('quizEmpty');
     empty.style.display = 'block';
-    empty.innerHTML = '<div class="icon">🎉</div><p>All mastered!</p>';
+    empty.innerHTML = '<div class="icon">🎉</div><p>All mastered!</p><p>Load more or reset progress.</p>';
     return;
   }
   state.position++;
@@ -1126,7 +1875,7 @@ function submitAnswer() {
   const fb = document.getElementById('feedback');
   fb.className = 'feedback ' + (isCorrect ? 'correct' : 'wrong');
   fb.style.display = 'block';
-  fb.innerHTML = `<div class="verdict">${isCorrect ? '✅ Correct!' : '❌ Wrong'}</div>
+  fb.innerHTML = `<div class="verdict">${isCorrect ? '✓ Correct!' : '✕ Wrong'}</div>
     <div class="why"><strong>Correct:</strong> ${q.correct.map(escapeHtml).join('; ')}<br><br>${q.explanation ? escapeHtml(q.explanation) : ''}</div>`;
   document.getElementById('submitBtn').style.display = 'none';
   document.getElementById('skipBtn').style.display = 'none';
@@ -1173,16 +1922,16 @@ function updateProgressBar() {
   document.getElementById('pbPct').textContent = t ? Math.round((c / t) * 100) : 0;
 }
 
-// ═══════════════════════════════════════════════════════════════
-// STUDY
-// ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   STUDY
+   ═══════════════════════════════════════════════════════════════ */
 function renderNotesChips() {
   const chips = document.getElementById('notesChips');
   if (!state.notes.length) { chips.innerHTML = ''; return; }
   chips.innerHTML = state.notes.map(n => {
     const active = n.id === state.activeNoteId ? ' active' : '';
     const label = n.exam ? `${n.topic} · ${n.exam}` : n.topic;
-    return `<button class="chip${active}" data-note-id="${n.id}">${escapeHtml(label)}</button>`;
+    return `<button class="chip ripple${active}" data-note-id="${n.id}">${escapeHtml(label)}</button>`;
   }).join('');
   chips.querySelectorAll('.chip').forEach(c => {
     c.addEventListener('click', () => {
@@ -1192,6 +1941,7 @@ function renderNotesChips() {
       renderStudy();
     });
   });
+  attachRipples();
 }
 
 function renderStudy() {
@@ -1214,28 +1964,43 @@ function renderStudy() {
   document.getElementById('notesContent').innerHTML = renderMarkdown(note.content);
   const btn = document.getElementById('startQuizFromNotes');
   btn.disabled = qCount === 0;
-  btn.textContent = qCount === 0 ? 'No questions yet' : `Start Quiz (${qCount}) →`;
+  btn.textContent = qCount === 0 ? 'No questions yet' : `Start quiz (${qCount}) →`;
 }
 
-// ═══════════════════════════════════════════════════════════════
-// NOTES MODAL
-// ═══════════════════════════════════════════════════════════════
-function openNotesModal(topic) {
+/* ═══════════════════════════════════════════════════════════════
+   NOTES SHEET
+   ═══════════════════════════════════════════════════════════════ */
+function openNotesSheet(topic) {
   const note = state.notes.find(n => n.topic === topic);
-  if (!note) { toast('No notes for this topic', 'error'); return; }
-  document.getElementById('modalTitle').textContent = '📖 ' + note.topic + (note.exam ? ' · ' + note.exam : '');
+  if (!note) { snack('No notes for this topic', 'error'); return; }
+  document.getElementById('modalTitle').textContent = '📖 ' + note.topic;
   document.getElementById('modalContent').innerHTML = renderMarkdown(note.content);
-  document.getElementById('notesModal').classList.add('show');
-  document.body.style.overflow = 'hidden';
+  openSheet('notesSheet');
 }
-function closeNotesModal() {
-  document.getElementById('notesModal').classList.remove('show');
+
+/* ═══════════════════════════════════════════════════════════════
+   SHEET HELPERS
+   ═══════════════════════════════════════════════════════════════ */
+function openSheet(id) {
+  document.getElementById('scrim').classList.add('show');
+  document.getElementById(id).classList.add('show');
+  document.body.style.overflow = 'hidden';
+  history.pushState({ sheet: id }, '', '#' + id);
+}
+function closeSheet(id) {
+  document.getElementById(id).classList.remove('show');
+  document.getElementById('scrim').classList.remove('show');
+  document.body.style.overflow = '';
+}
+function closeAllSheets() {
+  document.querySelectorAll('.sheet').forEach(s => s.classList.remove('show'));
+  document.getElementById('scrim').classList.remove('show');
   document.body.style.overflow = '';
 }
 
-// ═══════════════════════════════════════════════════════════════
-// REPORT
-// ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   REPORT
+   ═══════════════════════════════════════════════════════════════ */
 function renderReport() {
   const content = document.getElementById('reportContent');
   const empty = document.getElementById('reportEmpty');
@@ -1264,8 +2029,8 @@ function renderReport() {
   }
   content.innerHTML = `
     <div class="card">
-      <h2>📊 Report</h2>
-      <p class="sub">${state.name} · ${new Date().toLocaleString()}</p>
+      <h2 class="card-title">📊 Performance</h2>
+      <p class="card-sub">${escapeHtml(state.name)} · ${new Date().toLocaleString()}</p>
       <div class="stat-grid">
         <div class="stat"><div class="value">${total}</div><div class="label">Attempts</div></div>
         <div class="stat"><div class="value">${totalCorrect}</div><div class="label">Correct</div></div>
@@ -1274,24 +2039,24 @@ function renderReport() {
         <div class="stat"><div class="value">${grade}</div><div class="label">Grade</div></div>
       </div>
       <div class="bar-visual">
-        <div class="bar-seg" style="background: var(--green); width: ${pct}%;"></div>
-        <div class="bar-seg" style="background: var(--red); width: ${100 - pct}%;"></div>
+        <div class="bar-seg" style="background: var(--success); width: ${pct}%;"></div>
+        <div class="bar-seg" style="background: var(--error); width: ${100 - pct}%;"></div>
       </div>
     </div>
-    <div class="card"><h3>By Topic</h3>${table(byTopic)}</div>
-    <div class="card"><h3>By Subtopic</h3>${table(bySubtopic)}</div>
-    <div class="card"><h3>By Type</h3>${table(byType)}</div>
-    <div class="card"><h3>By Difficulty</h3>${table(byDiff)}</div>
+    <div class="card"><h3 class="section-label" style="margin-top: 0;">By Topic</h3>${table(byTopic)}</div>
+    <div class="card"><h3 class="section-label" style="margin-top: 0;">By Subtopic</h3>${table(bySubtopic)}</div>
+    <div class="card"><h3 class="section-label" style="margin-top: 0;">By Type</h3>${table(byType)}</div>
+    <div class="card"><h3 class="section-label" style="margin-top: 0;">By Difficulty</h3>${table(byDiff)}</div>
     <div class="card">
-      <h3>Status</h3>
-      <div class="stat-grid" style="grid-template-columns: repeat(2,1fr);">
-        <div class="stat"><div class="value">${fresh}</div><div class="label">Not Shown</div></div>
+      <h3 class="section-label" style="margin-top: 0;">Status</h3>
+      <div class="stat-grid" style="grid-template-columns: repeat(2,1fr); margin-bottom: 0;">
+        <div class="stat"><div class="value">${fresh}</div><div class="label">Not shown</div></div>
         <div class="stat"><div class="value">${active}</div><div class="label">Active</div></div>
-        <div class="stat"><div class="value" style="color:var(--red);">${weak}</div><div class="label">Weak</div></div>
-        <div class="stat"><div class="value" style="color:var(--green);">${retired}</div><div class="label">Retired</div></div>
+        <div class="stat"><div class="value" style="color: var(--error);">${weak}</div><div class="label">Weak</div></div>
+        <div class="stat"><div class="value" style="color: var(--success);">${retired}</div><div class="label">Retired</div></div>
       </div>
     </div>
-    <div class="card"><h3>Weak Areas</h3>${weakList(bySubtopic)}</div>`;
+    <div class="card"><h3 class="section-label" style="margin-top: 0;">Weak areas</h3>${weakList(bySubtopic)}</div>`;
 }
 function table(obj) {
   const rows = Object.entries(obj).map(([k, v]) => {
@@ -1308,15 +2073,15 @@ function weakList(bySub) {
     .filter(x => x.total >= 2 && x.pct < 70)
     .sort((a, b) => a.pct - b.pct)
     .slice(0, 8);
-  if (!weak.length) return '<p style="color:var(--muted); font-size:14px;">No weak areas yet.</p>';
-  return weak.map((w, i) => `<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:10px;">
+  if (!weak.length) return '<p style="color:var(--on-surface-var); font-size:14px;">No weak areas yet.</p>';
+  return weak.map((w, i) => `<div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--outline-var);gap:10px;">
     <div style="flex:1;font-size:14px;">${i+1}. ${escapeHtml(w.name)}</div>
-    <div style="color:var(--red);font-weight:700;font-size:14px;">${w.pct.toFixed(0)}%</div></div>`).join('');
+    <div style="color:var(--error);font-weight:500;font-size:14px;">${w.pct.toFixed(0)}%</div></div>`).join('');
 }
 
-// ═══════════════════════════════════════════════════════════════
-// BANK
-// ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   BANK
+   ═══════════════════════════════════════════════════════════════ */
 function renderBank() {
   const summary = document.getElementById('bankSummary');
   const list = document.getElementById('bankList');
@@ -1328,19 +2093,20 @@ function renderBank() {
   }
   summary.textContent = `${total} questions · ${noteCount} note set${noteCount !== 1 ? 's' : ''}`;
   if (noteCount) {
-    notesList.innerHTML = `<div class="card"><h3>📖 Notes</h3>${state.notes.map(n =>
-      `<div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:10px;align-items:center;">
+    notesList.innerHTML = `<div class="card"><h3 class="section-label" style="margin-top: 0;">📖 Notes</h3>${state.notes.map(n =>
+      `<div style="padding:12px 0;border-bottom:1px solid var(--outline-var);display:flex;justify-content:space-between;gap:10px;align-items:center;">
         <div style="flex:1;">
-          <div style="font-weight:600;font-size:14px;">${escapeHtml(n.topic)}</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:2px;">${n.exam ? escapeHtml(n.exam) + ' · ' : ''}${new Date(n.addedAt).toLocaleDateString()}</div>
+          <div style="font-weight:500;font-size:14px;">${escapeHtml(n.topic)}</div>
+          <div style="font-size:12px;color:var(--on-surface-var);margin-top:4px;">${n.exam ? escapeHtml(n.exam) + ' · ' : ''}${new Date(n.addedAt).toLocaleDateString()}</div>
         </div>
-        <button class="ghost" data-open-note="${n.id}" style="font-size:12px;padding:6px 12px;min-height:32px;">Open</button>
+        <button class="btn btn-text ripple" data-open-note="${n.id}" style="padding: 0 14px; min-height: 36px; font-size: 13px;">Open</button>
       </div>`).join('')}</div>`;
     notesList.querySelectorAll('[data-open-note]').forEach(b => {
       b.addEventListener('click', () => {
         state.activeNoteId = b.dataset.openNote; persist(); switchTab('study');
       });
     });
+    attachRipples();
   } else notesList.innerHTML = '';
   if (!total) { list.innerHTML = ''; return; }
   const byTopic = {};
@@ -1349,27 +2115,27 @@ function renderBank() {
     const items = qs.map(q => {
       const m = state.meta[q._id];
       const cls = m.status === 'weak' ? 'weak' : m.status === 'retired' ? 'easy' : '';
-      return `<div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:10px;align-items:flex-start;">
+      return `<div style="padding:12px 0;border-bottom:1px solid var(--outline-var);display:flex;justify-content:space-between;gap:10px;align-items:flex-start;">
         <div style="flex:1;font-size:14px;line-height:1.5;">
-          <span class="pill ${cls}" style="font-size:10px;padding:2px 8px;">${m.status}</span>
-          <span style="margin-left:6px;color:var(--muted);font-size:12px;">${escapeHtml(q.subtopic)}</span>
+          <span class="pill ${cls}" style="font-size:10px;padding:3px 10px;">${m.status}</span>
+          <span style="margin-left:6px;color:var(--on-surface-var);font-size:12px;">${escapeHtml(q.subtopic)}</span>
           <div style="margin-top:6px;">${escapeHtml(q.question.slice(0, 90))}${q.question.length > 90 ? '…' : ''}</div>
         </div>
-        <div style="font-size:12px;color:var(--muted);white-space:nowrap;">✅${m.correct} ❌${m.wrong}</div>
+        <div style="font-size:12px;color:var(--on-surface-var);white-space:nowrap;">✅${m.correct} ❌${m.wrong}</div>
       </div>`;
     }).join('');
-    return `<div class="card"><h3>${escapeHtml(topic)} (${qs.length})</h3>${items}</div>`;
+    return `<div class="card"><h3 class="section-label" style="margin-top: 0;">${escapeHtml(topic)} (${qs.length})</h3>${items}</div>`;
   }).join('');
 }
 
-// ═══════════════════════════════════════════════════════════════
-// HOME STATS
-// ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   HOME STATS
+   ═══════════════════════════════════════════════════════════════ */
 function updateHomeStats() {
   const card = document.getElementById('sessionCard');
   if (!state.bank.length && !state.notes.length) { card.style.display = 'none'; return; }
   card.style.display = 'block';
-  document.getElementById('activePackName').textContent = state.name;
+  document.getElementById('activePackTitle').textContent = 'Active: ' + state.name;
   document.getElementById('sessionTotal').textContent = state.bank.length;
   document.getElementById('sessionNotes').textContent = state.notes.length;
   document.getElementById('sessionCorrect').textContent = state.session.correct;
@@ -1383,27 +2149,38 @@ function updateStorageStatus() {
   const pickBtn = document.getElementById('pickFolderBtn');
   const reloadBtn = document.getElementById('reloadFolderBtn');
   if (!supportsFSA) {
-    el.innerHTML = '⚠️ Your browser does not support folder storage. Packs save in browser memory (small, may be lost). Use Chrome on Android or desktop for file storage.';
+    el.textContent = 'Your browser does not support folder storage. Packs save in browser memory only.';
     pickBtn.style.display = 'none';
     return;
   }
   if (dirHandle) {
-    el.innerHTML = `📁 <strong>Folder connected</strong> — packs auto-save as <code>.json</code> files. Unlimited storage.`;
-    pickBtn.textContent = '📁 Change Folder';
+    el.innerHTML = '📁 <strong>Folder connected</strong> — packs auto-save as <code>.json</code> files.';
+    pickBtn.textContent = '📁 Change folder';
     reloadBtn.style.display = '';
   } else {
-    el.innerHTML = 'No folder set. Packs save in browser memory only. <strong>Set a folder for unlimited, permanent storage.</strong>';
-    pickBtn.textContent = '📁 Choose Save Folder';
+    el.innerHTML = 'No folder set. <strong>Choose a folder for unlimited, permanent storage.</strong>';
+    pickBtn.textContent = '📁 Choose folder';
     reloadBtn.style.display = 'none';
   }
 }
 
-// ═══════════════════════════════════════════════════════════════
-// TAB SWITCHING
-// ═══════════════════════════════════════════════════════════════
-function switchTab(name) {
-  document.querySelectorAll('nav button[data-tab]').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
-  document.querySelectorAll('section').forEach(s => s.classList.toggle('active', s.id === name));
+/* ═══════════════════════════════════════════════════════════════
+   TAB SWITCHING (with Android back button support)
+   ═══════════════════════════════════════════════════════════════ */
+function switchTab(name, fromPop = false) {
+  const currentTab = document.querySelector('.section.active')?.id;
+  if (currentTab === name) return;
+  
+  document.querySelectorAll('.nav-item, nav.top-nav button, .appbar-actions .icon-btn[data-tab]').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === name);
+  });
+  document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === name));
+  
+  if (!fromPop) {
+    history.pushState({ tab: name }, '', '#' + name);
+    tabHistory.push(name);
+  }
+  
   if (name === 'report') renderReport();
   if (name === 'bank') renderBank();
   if (name === 'home') updateHomeStats();
@@ -1412,6 +2189,19 @@ function switchTab(name) {
     document.getElementById('quizEmpty').style.display = 'block';
     document.getElementById('quizActive').style.display = 'none';
   }
+  
+  // FAB visibility
+  const fab = document.getElementById('fabBtn');
+  if (name === 'home') {
+    fab.classList.toggle('hidden', !state.bank.length);
+  } else if (name === 'study') {
+    fab.classList.add('hidden');
+  } else if (name === 'quiz') {
+    fab.classList.add('hidden');
+  } else {
+    fab.classList.add('hidden');
+  }
+  
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -1421,12 +2211,15 @@ function refreshAllViews() {
   renderNotesChips();
   renderStudy();
   renderPackList();
-  if (document.getElementById('report').classList.contains('active')) renderReport();
+  const activeTab = document.querySelector('.section.active')?.id;
+  if (activeTab === 'report') renderReport();
+  const fab = document.getElementById('fabBtn');
+  if (activeTab === 'home') fab.classList.toggle('hidden', !state.bank.length);
 }
 
-// ═══════════════════════════════════════════════════════════════
-// PACK LIST RENDERING
-// ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   PACK LIST
+   ═══════════════════════════════════════════════════════════════ */
 function renderPackList() {
   const list = document.getElementById('packList');
   if (!list) return;
@@ -1434,17 +2227,17 @@ function renderPackList() {
   list.innerHTML = entries.map(p => {
     const isActive = p.id === currentPackId;
     return `<div class="pack-item${isActive ? ' active' : ''}">
-      <div class="name">${isActive ? '✅ ' : ''}${escapeHtml(p.name)}</div>
-      <div class="info">${(p.bank||[]).length} questions · ${(p.notes||[]).length} notes · Updated ${new Date(p.updatedAt).toLocaleDateString()}</div>
+      <div class="name">${isActive ? '✓ ' : ''}${escapeHtml(p.name)}</div>
+      <div class="info">${(p.bank||[]).length} questions · ${(p.notes||[]).length} notes · ${new Date(p.updatedAt).toLocaleDateString()}</div>
       <div class="actions">
-        ${!isActive ? `<button class="ghost" data-switch="${p.id}">Switch</button>` : ''}
-        <button class="ghost" data-rename="${p.id}">✏ Rename</button>
-        <button class="ghost" data-dup="${p.id}">📋 Copy</button>
-        <button class="danger" data-del="${p.id}">🗑</button>
+        ${!isActive ? `<button class="btn btn-tonal ripple" data-switch="${p.id}">Switch</button>` : ''}
+        <button class="btn btn-outlined ripple" data-rename="${p.id}">Rename</button>
+        <button class="btn btn-outlined ripple" data-dup="${p.id}">Copy</button>
+        <button class="btn btn-error ripple" data-del="${p.id}">Delete</button>
       </div>
     </div>`;
   }).join('');
-  list.querySelectorAll('[data-switch]').forEach(b => b.onclick = () => { switchPack(b.dataset.switch); closePackModal(); });
+  list.querySelectorAll('[data-switch]').forEach(b => b.onclick = () => { switchPack(b.dataset.switch); closeSheet('packSheet'); });
   list.querySelectorAll('[data-rename]').forEach(b => b.onclick = () => {
     const p = packs[b.dataset.rename];
     const newName = prompt('Rename pack:', p.name);
@@ -1452,13 +2245,12 @@ function renderPackList() {
   });
   list.querySelectorAll('[data-dup]').forEach(b => b.onclick = () => duplicatePack(b.dataset.dup));
   list.querySelectorAll('[data-del]').forEach(b => b.onclick = () => deletePack(b.dataset.del));
+  attachRipples();
 }
-function openPackModal() { renderPackList(); document.getElementById('packModal').classList.add('show'); document.body.style.overflow = 'hidden'; }
-function closePackModal() { document.getElementById('packModal').classList.remove('show'); document.body.style.overflow = ''; }
 
-// ═══════════════════════════════════════════════════════════════
-// EXPORT / RESET
-// ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   EXPORT / RESET
+   ═══════════════════════════════════════════════════════════════ */
 function exportData() {
   const backup = { version: 3, exportedAt: new Date().toISOString(), activePackId: currentPackId, packs };
   const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
@@ -1466,22 +2258,22 @@ function exportData() {
   const a = document.createElement('a');
   a.href = url; a.download = `azexams-backup-${Date.now()}.json`; a.click();
   URL.revokeObjectURL(url);
-  toast('Exported!', 'success');
+  snack('Backup exported', 'success');
 }
 function resetState() {
-  if (!confirm('Reset progress? Bank + notes stay.')) return;
+  if (!confirm('Reset progress? Questions and notes stay.')) return;
   for (const q of state.bank) state.meta[q._id] = freshMeta();
   state.position = 0;
   state.session = { correct: 0, wrong: 0, started: Date.now() };
   state.preferSubtopic = null;
   persist();
-  toast('Progress reset', 'success');
+  snack('Progress reset', 'success');
   refreshAllViews();
 }
 
-// ═══════════════════════════════════════════════════════════════
-// PWA
-// ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   PWA
+   ═══════════════════════════════════════════════════════════════ */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').catch(e => console.log('SW reg failed', e));
@@ -1495,26 +2287,39 @@ window.addEventListener('beforeinstallprompt', (e) => {
 window.addEventListener('appinstalled', () => {
   document.getElementById('installBanner').classList.remove('show');
   deferredInstall = null;
-  toast('🎉 AZExams installed!', 'success');
-});
-document.getElementById('installBtn').addEventListener('click', async () => {
-  if (!deferredInstall) return;
-  deferredInstall.prompt();
-  const { outcome } = await deferredInstall.userChoice;
-  if (outcome === 'accepted') toast('Installing...', 'success');
-  deferredInstall = null;
-  document.getElementById('installBanner').classList.remove('show');
+  snack('🎉 AZExams installed!', 'success');
 });
 
-// ═══════════════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
+   ANDROID BACK BUTTON
+   ═══════════════════════════════════════════════════════════════ */
+window.addEventListener('popstate', (e) => {
+  // If a sheet is open, close it first
+  const anySheetOpen = document.querySelector('.sheet.show');
+  if (anySheetOpen) {
+    closeAllSheets();
+    return;
+  }
+  // Otherwise handle tab
+  const state_ = e.state;
+  if (state_ && state_.tab) {
+    switchTab(state_.tab, true);
+  } else {
+    // No history — go to home
+    if (document.querySelector('.section.active')?.id !== 'home') {
+      switchTab('home', true);
+    }
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════════════ */
 async function init() {
   // Try to restore folder handle
   try {
     dirHandle = await idbGet(IDB_HANDLE_KEY);
     if (dirHandle) {
-      // Query permission without prompting (may be auto-granted if recently used)
       const granted = await ensurePermission(dirHandle, false);
       if (granted) {
         const fromDisk = await loadPacksFromDisk();
@@ -1523,14 +2328,10 @@ async function init() {
           const lastId = localStorage.getItem(LAST_PACK_KEY);
           currentPackId = (lastId && packs[lastId]) ? lastId : Object.keys(packs)[0];
         }
-      } else {
-        // Permission not granted; user must re-choose. Keep handle but flag.
-        console.log('Folder handle present but permission not granted');
       }
     }
   } catch (e) { console.error('Init folder restore failed', e); }
   
-  // If no packs loaded, create default
   if (!currentPackId || !packs[currentPackId]) {
     const p = freshPack('My First Pack');
     packs[p.id] = p;
@@ -1542,18 +2343,32 @@ async function init() {
   updateStorageStatus();
   refreshAllViews();
   
-  // Wire up
-  document.querySelectorAll('nav button[data-tab]').forEach(b => {
+  // Set initial history state
+  history.replaceState({ tab: 'home' }, '', '#home');
+  
+  // Wire tab clicks
+  document.querySelectorAll('[data-tab]').forEach(b => {
     b.addEventListener('click', () => switchTab(b.dataset.tab));
   });
-  document.getElementById('folderBtn').addEventListener('click', () => switchTab('home'));
-  document.getElementById('packBtn').addEventListener('click', openPackModal);
-  document.getElementById('packModalClose').addEventListener('click', closePackModal);
-  document.getElementById('packModal').addEventListener('click', (e) => { if (e.target.id === 'packModal') closePackModal(); });
-  document.getElementById('newPackBtn').addEventListener('click', () => {
-    const name = prompt('New pack name:', 'New Pack');
-    if (name && name.trim()) { createPack(name.trim()); closePackModal(); }
+  
+  // Wire sheet close buttons
+  document.querySelectorAll('[data-close]').forEach(b => {
+    b.addEventListener('click', () => closeSheet(b.dataset.close));
   });
+  
+  // Scrim closes sheets
+  document.getElementById('scrim').addEventListener('click', () => {
+    closeAllSheets();
+    history.back();
+  });
+  
+  // Pack button
+  document.getElementById('packBtn').addEventListener('click', () => {
+    renderPackList();
+    openSheet('packSheet');
+  });
+  
+  // Storage buttons
   document.getElementById('pickFolderBtn').addEventListener('click', pickFolder);
   document.getElementById('reloadFolderBtn').addEventListener('click', async () => {
     if (!dirHandle) return;
@@ -1564,9 +2379,11 @@ async function init() {
       currentPackId = (lastId && packs[lastId]) ? lastId : Object.keys(packs)[0];
       setActivePack(currentPackId);
       refreshAllViews();
-      toast(`Reloaded ${Object.keys(packs).length} packs`, 'success');
-    } else toast('No packs found in folder', 'error');
+      snack(`Reloaded ${Object.keys(packs).length} packs`, 'success');
+    } else snack('No packs found in folder', 'error');
   });
+  
+  // Content buttons
   document.getElementById('loadNotesBtn').addEventListener('click', loadNotesOnly);
   document.getElementById('loadBtn').addEventListener('click', loadJSON);
   document.getElementById('startBtn').addEventListener('click', startQuiz);
@@ -1575,19 +2392,66 @@ async function init() {
   document.getElementById('nextBtn').addEventListener('click', serveNext);
   document.getElementById('exportBtn').addEventListener('click', exportData);
   document.getElementById('resetStateBtn').addEventListener('click', resetState);
-  document.getElementById('peekBtn').addEventListener('click', () => { if (current) openNotesModal(current.question.topic); });
-  document.getElementById('modalClose').addEventListener('click', closeNotesModal);
-  document.getElementById('notesModal').addEventListener('click', (e) => { if (e.target.id === 'notesModal') closeNotesModal(); });
+  document.getElementById('peekBtn').addEventListener('click', () => { if (current) openNotesSheet(current.question.topic); });
   document.getElementById('startQuizFromNotes').addEventListener('click', () => {
-    const note = state.notes.find(n => n.id === state.activeNoteId);
-    if (note) startQuiz();
+    if (state.activeNoteId) startQuiz();
   });
   document.getElementById('deleteNoteBtn').addEventListener('click', () => {
     if (state.activeNoteId) deleteNote(state.activeNoteId);
   });
-  document.getElementById('studyGoHome').addEventListener('click', () => switchTab('home'));
-  document.getElementById('quizGoHome').addEventListener('click', () => switchTab('home'));
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeNotesModal(); closePackModal(); } });
+  document.getElementById('newPackBtn').addEventListener('click', () => {
+    const name = prompt('New pack name:', 'New Pack');
+    if (name && name.trim()) {
+      createPack(name.trim());
+      closeSheet('packSheet');
+      history.back();
+    }
+  });
+  document.getElementById('installBtn').addEventListener('click', async () => {
+    if (!deferredInstall) return;
+    deferredInstall.prompt();
+    const { outcome } = await deferredInstall.userChoice;
+    if (outcome === 'accepted') snack('Installing...', 'success');
+    deferredInstall = null;
+    document.getElementById('installBanner').classList.remove('show');
+  });
+  
+  // FAB
+  document.getElementById('fabBtn').addEventListener('click', startQuiz);
+  
+  // Auto-fill m3-field labels on load
+  document.querySelectorAll('.m3-field textarea, .m3-field input').forEach(el => {
+    const wrapper = el.closest('.m3-field');
+    const update = () => wrapper.classList.toggle('filled', el.value.length > 0);
+    el.addEventListener('input', update);
+    update();
+  });
+  
+  // Keyboard shortcuts (desktop)
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (document.querySelector('.sheet.show')) {
+        closeAllSheets();
+        history.back();
+      }
+    }
+    if (document.getElementById('quiz').classList.contains('active') && current && !current.answered) {
+      if (e.key >= '1' && e.key <= '9') {
+        const idx = parseInt(e.key) - 1;
+        if (idx < current.options.length) selectOption(idx);
+      }
+      if (e.key === 'Enter') submitAnswer();
+    } else if (document.getElementById('quiz').classList.contains('active') && current?.answered) {
+      if (e.key === 'Enter' || e.key === ' ') serveNext();
+    }
+  });
+  
+  // Attach ripples to initial .ripple elements
+  attachRipples();
+  
+  // Re-attach ripples when DOM changes (dynamic content)
+  const mo = new MutationObserver(() => attachRipples());
+  mo.observe(document.body, { childList: true, subtree: true });
 }
 
 document.addEventListener('DOMContentLoaded', init);
