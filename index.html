@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0f1419">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AZExams">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23f97316'/%3E%3Ctext x='50' y='62' font-size='46' font-weight='bold' text-anchor='middle' fill='white' font-family='sans-serif'%3EAZ%3C/text%3E%3C/svg%3E">
+<title>AZExams — Study & Quiz</title>
+<style>
+  :root {
+    --bg: #0f1419; --bg2: #1a2027; --bg3: #242b33;
+    --border: #2d3748; --text: #e6edf3; --muted: #8b98a5;
+    --accent: #f97316; --accent2: #fb923c;
+    --green: #22c55e; --red: #ef4444; --yellow: #eab308; --blue: #3b82f6;
+    --nav-h: 68px;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { overscroll-behavior-y: none; touch-action: manipulation; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh; min-height: 100dvh;
+    line-height: 1.5; -webkit-font-smoothing: antialiased; font-size: 16px;
+  }
+  header {
+    background: var(--bg2); border-bottom: 1px solid var(--border);
+    padding: calc(var(--safe-top) + 12px) 16px 12px;
+    position: sticky; top: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; min-height: 56px;
+  }
+  .logo { font-size: 20px; font-weight: 800; color: var(--accent); letter-spacing: -0.3px; display: flex; align-items: center; gap: 8px; }
+  .logo::before { content: "📘"; font-size: 22px; }
+  .header-actions { display: flex; gap: 6px; align-items: center; }
+  .header-actions button {
+    background: transparent; border: 1px solid var(--border); color: var(--text);
+    border-radius: 10px; padding: 8px 12px; font-size: 14px; cursor: pointer;
+    min-height: 40px; font-family: inherit; display: flex; align-items: center; gap: 6px;
+    font-weight: 600;
+  }
+  .header-actions button:active { background: var(--bg3); }
+  nav.top-nav { display: none; gap: 4px; }
+  nav.top-nav button {
+    background: transparent; color: var(--muted); border: 1px solid transparent;
+    padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 14px;
+    font-weight: 600; min-height: 40px; font-family: inherit;
+  }
+  nav.top-nav button.active { color: var(--accent); background: var(--bg3); border-color: var(--border); }
+  nav.bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--bg2); border-top: 1px solid var(--border);
+    padding-bottom: var(--safe-bottom);
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    z-index: 200; box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+  }
+  nav.bottom-nav button {
+    background: transparent; border: none; color: var(--muted);
+    padding: 10px 2px 12px; min-height: var(--nav-h); cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px; font-size: 10px; font-weight: 600; font-family: inherit;
+    position: relative;
+  }
+  nav.bottom-nav button .icon { font-size: 21px; line-height: 1; }
+  nav.bottom-nav button.active { color: var(--accent); }
+  nav.bottom-nav button.active::before {
+    content: ""; position: absolute; top: 0; left: 22%; right: 22%;
+    height: 3px; background: var(--accent); border-radius: 0 0 4px 4px;
+  }
+  main {
+    max-width: 900px; margin: 0 auto;
+    padding: 16px 16px calc(var(--nav-h) + var(--safe-bottom) + 32px);
+  }
+  section { display: none; }
+  section.active { display: block; }
+  .card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px; margin-bottom: 14px;
+  }
+  h2 { font-size: 20px; margin-bottom: 6px; letter-spacing: -0.3px; }
+  h3 { font-size: 13px; margin-bottom: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; }
+  p.sub { color: var(--muted); font-size: 14px; margin-bottom: 18px; line-height: 1.55; }
+  .banner {
+    background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.4);
+    border-radius: 12px; padding: 14px 16px; margin-bottom: 14px;
+    font-size: 14px; line-height: 1.5; display: flex; gap: 12px; align-items: flex-start;
+  }
+  .banner .icon { font-size: 20px; flex-shrink: 0; }
+  .banner strong { color: var(--accent); }
+  textarea {
+    width: 100%; min-height: 180px; background: var(--bg); color: var(--text);
+    border: 1px solid var(--border); border-radius: 12px; padding: 14px;
+    font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 16px;
+    resize: vertical; outline: none; line-height: 1.55; -webkit-appearance: none;
+  }
+  textarea:focus { border-color: var(--accent); }
+  textarea.notes-area { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; min-height: 160px; }
+  .field-label { display: block; font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .field-hint { font-size: 13px; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+  button.primary {
+    background: var(--accent); color: white; border: none; padding: 14px 22px;
+    border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer;
+    min-height: 50px; font-family: inherit; width: 100%;
+    transition: transform 0.08s, background 0.15s;
+  }
+  button.primary:active { transform: scale(0.98); background: var(--accent2); }
+  button.primary:disabled { opacity: 0.4; cursor: not-allowed; }
+  button.secondary {
+    background: transparent; color: var(--text); border: 1px solid var(--border);
+    padding: 14px 22px; border-radius: 12px; font-weight: 700; font-size: 15px;
+    cursor: pointer; min-height: 50px; font-family: inherit; width: 100%;
+  }
+  button.secondary:active { transform: scale(0.98); background: var(--bg3); }
+  button.danger {
+    background: transparent; color: var(--red); border: 1px solid var(--red);
+    padding: 12px 18px; border-radius: 12px; font-size: 14px; font-weight: 600;
+    cursor: pointer; min-height: 46px; font-family: inherit;
+  }
+  button.ghost {
+    background: transparent; color: var(--accent); border: 1px solid var(--border);
+    padding: 10px 16px; border-radius: 10px; font-size: 13px; font-weight: 600;
+    cursor: pointer; min-height: 40px; font-family: inherit;
+  }
+  button.ghost:active { background: var(--bg3); }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  .row > * { flex: 1; min-width: 140px; }
+  .row.tight { margin-top: 8px; }
+  .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 14px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    flex-shrink: 0; background: var(--bg3); border: 1px solid var(--border);
+    color: var(--muted); padding: 8px 14px; border-radius: 20px;
+    font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
+    min-height: 36px; white-space: nowrap;
+  }
+  .chip.active { background: rgba(249,115,22,0.15); color: var(--accent); border-color: var(--accent); }
+  .notes-header {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 14px; padding: 16px 18px; margin-bottom: 14px;
+  }
+  .notes-header .title { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+  .notes-header .meta { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .notes-content {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 14px; padding: 22px 20px; line-height: 1.75;
+    font-size: 15.5px; color: var(--text); word-wrap: break-word;
+  }
+  .notes-content h1, .notes-content h2 { font-size: 22px; margin: 22px 0 12px; color: var(--accent); letter-spacing: -0.3px; line-height: 1.3; }
+  .notes-content h1:first-child, .notes-content h2:first-child { margin-top: 0; }
+  .notes-content h3 { font-size: 17px; margin: 20px 0 10px; color: var(--accent2); text-transform: none; letter-spacing: 0; font-weight: 700; }
+  .notes-content h4 { font-size: 15px; margin: 16px 0 8px; color: var(--text); font-weight: 700; }
+  .notes-content p { margin: 0 0 12px; }
+  .notes-content ul, .notes-content ol { margin: 0 0 14px; padding-left: 24px; }
+  .notes-content li { margin-bottom: 6px; }
+  .notes-content li::marker { color: var(--accent); }
+  .notes-content code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 13.5px; font-family: 'SF Mono', Monaco, Consolas, monospace; color: var(--accent2); }
+  .notes-content strong { color: #fff; font-weight: 700; }
+  .notes-content em { color: var(--accent2); }
+  .notes-content blockquote { border-left: 3px solid var(--accent); padding: 8px 14px; margin: 12px 0; color: var(--muted); background: var(--bg3); border-radius: 0 8px 8px 0; font-style: italic; }
+  .notes-content hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+  .study-footer, .quiz-actions {
+    position: sticky; bottom: calc(var(--nav-h) + var(--safe-bottom) + 8px);
+    display: flex; gap: 10px; padding: 10px;
+    background: rgba(15,20,25,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-radius: 14px; border: 1px solid var(--border); margin-top: 8px; z-index: 50;
+  }
+  .study-footer button, .quiz-actions button { flex: 1; }
+  .quiz-shell { display: flex; flex-direction: column; gap: 12px; }
+  .quiz-topbar {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 14px;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 10px; font-size: 13px; flex-wrap: wrap;
+  }
+  .progress-inline { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .progress-inline .stat-mini { color: var(--text); font-weight: 600; }
+  .progress-inline .stat-mini.c { color: var(--green); }
+  .progress-inline .stat-mini.w { color: var(--red); }
+  .topbar-actions { display: flex; gap: 6px; align-items: center; }
+  .timer-badge { background: var(--bg3); border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 6px; }
+  .timer-badge.warn { color: var(--yellow); border-color: rgba(234,179,8,0.4); }
+  .timer-badge.danger { color: var(--red); border-color: rgba(239,68,68,0.5); animation: pulse 1s infinite; }
+  @keyframes pulse { 50% { opacity: 0.6; } }
+  .peek-btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 20px; font-weight: 700; font-size: 14px; cursor: pointer; font-family: inherit; }
+  .quiz-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 18px; }
+  .quiz-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .pill { background: var(--bg3); border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .pill.easy { color: var(--green); border-color: rgba(34,197,94,0.3); }
+  .pill.medium { color: var(--yellow); border-color: rgba(234,179,8,0.3); }
+  .pill.hard { color: var(--red); border-color: rgba(239,68,68,0.3); }
+  .pill.weak { background: rgba(239,68,68,0.12); color: var(--red); border-color: rgba(239,68,68,0.4); }
+  .timer-bar { height: 5px; background: var(--bg3); border-radius: 3px; overflow: hidden; margin-bottom: 18px; }
+  .timer-fill { height: 100%; background: var(--green); transition: width 1s linear, background 0.3s; border-radius: 3px; }
+  .timer-fill.warn { background: var(--yellow); }
+  .timer-fill.danger { background: var(--red); }
+  .question-text { font-size: 17px; line-height: 1.6; margin-bottom: 18px; white-space: pre-wrap; font-weight: 500; }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px;
+    padding: 14px 16px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px;
+    text-align: left; color: var(--text); font-size: 15px; width: 100%;
+    font-family: inherit; line-height: 1.5; min-height: 56px; -webkit-appearance: none;
+    transition: all 0.12s;
+  }
+  .option:active { transform: scale(0.99); }
+  .option.selected { border-color: var(--accent); background: rgba(249,115,22,0.1); }
+  .option.correct { border-color: var(--green); background: rgba(34,197,94,0.12); }
+  .option.wrong { border-color: var(--red); background: rgba(239,68,68,0.12); }
+  .option .num { background: var(--bg3); border-radius: 8px; min-width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: var(--muted); flex-shrink: 0; }
+  .option.selected .num { background: var(--accent); color: white; }
+  .option.correct .num { background: var(--green); color: white; }
+  .option.wrong .num { background: var(--red); color: white; }
+  .feedback { margin-top: 18px; padding: 16px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--bg3); }
+  .feedback.correct { border-color: rgba(34,197,94,0.5); background: rgba(34,197,94,0.08); }
+  .feedback.wrong { border-color: rgba(239,68,68,0.5); background: rgba(239,68,68,0.08); }
+  .feedback .verdict { font-weight: 800; font-size: 17px; margin-bottom: 8px; }
+  .feedback.correct .verdict { color: var(--green); }
+  .feedback.wrong .verdict { color: var(--red); }
+  .feedback .why { color: var(--text); font-size: 14px; line-height: 1.6; }
+  .feedback .why strong { color: var(--accent); }
+  .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
+  .stat { background: var(--bg3); border-radius: 12px; padding: 14px 10px; text-align: center; border: 1px solid var(--border); }
+  .stat .value { font-size: 24px; font-weight: 800; color: var(--accent); letter-spacing: -0.5px; }
+  .stat .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 16px; }
+  th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+  tr:last-child td { border-bottom: none; }
+  .bar-visual { display: flex; height: 10px; border-radius: 5px; overflow: hidden; background: var(--bg3); margin: 12px 0; }
+  .bar-seg { height: 100%; }
+  .empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .empty .icon { font-size: 52px; margin-bottom: 14px; opacity: 0.5; }
+  .empty p { margin-bottom: 6px; font-size: 15px; }
+  .empty .cta { margin-top: 20px; display: inline-block; }
+  .toast {
+    position: fixed; bottom: calc(var(--nav-h) + var(--safe-bottom) + 16px);
+    left: 16px; right: 16px; max-width: 480px; margin: 0 auto;
+    background: var(--bg3); color: var(--text); padding: 14px 18px;
+    border-radius: 12px; border: 1px solid var(--border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-size: 14px; font-weight: 500;
+    z-index: 1000; opacity: 0; transform: translateY(20px);
+    transition: opacity 0.2s, transform 0.2s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.success { border-color: var(--green); }
+  .toast.error { border-color: var(--red); }
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 500; display: none; align-items: flex-end; justify-content: center; }
+  .modal.show { display: flex; }
+  .modal-sheet {
+    background: var(--bg2); width: 100%; max-width: 800px;
+    max-height: 88vh; border-radius: 20px 20px 0 0;
+    display: flex; flex-direction: column; padding-bottom: var(--safe-bottom);
+    animation: slideUp 0.2s ease-out; border: 1px solid var(--border); border-bottom: none;
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal-header {
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    position: sticky; top: 0; background: var(--bg2);
+    border-radius: 20px 20px 0 0; z-index: 1;
+  }
+  .modal-header h3 { font-size: 16px; margin: 0; text-transform: none; letter-spacing: 0; color: var(--text); font-weight: 700; }
+  .modal-close { background: var(--bg3); border: 1px solid var(--border); color: var(--text); width: 36px; height: 36px; border-radius: 10px; cursor: pointer; font-size: 16px; }
+  .modal-body { overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
+  .pack-item {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px; margin-bottom: 10px;
+  }
+  .pack-item.active { background: rgba(249,115,22,0.1); border-color: var(--accent); }
+  .pack-item .name { font-weight: 700; font-size: 15px; word-break: break-word; }
+  .pack-item .info { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .pack-item .actions { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+  .pack-item .actions button { padding: 6px 12px; min-height: 34px; font-size: 12px; }
+  details { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-top: 12px; font-size: 13px; }
+  details summary { cursor: pointer; color: var(--muted); font-weight: 600; min-height: 24px; padding: 4px 0; }
+  details pre { margin-top: 12px; padding: 12px; background: var(--bg2); border-radius: 8px; overflow-x: auto; font-size: 12px; line-height: 1.5; color: var(--text); -webkit-overflow-scrolling: touch; }
+  code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+  .install-banner { display: none; }
+  .install-banner.show { display: flex; }
+  @media (min-width: 700px) {
+    nav.top-nav { display: flex; }
+    nav.bottom-nav { display: none; }
+    main { padding-bottom: 40px; padding-left: 24px; padding-right: 24px; }
+    .row > * { flex: 0 1 auto; min-width: 0; }
+    .stat-grid { grid-template-columns: repeat(5, 1fr); }
+    .study-footer, .quiz-actions { bottom: 16px; }
+    .toast { bottom: 24px; }
+    button.primary, button.secondary { width: auto; min-width: 140px; }
+    .modal { align-items: center; padding: 20px; }
+    .modal-sheet { border-radius: 20px; max-height: 85vh; }
+  }
+  @media (max-width: 380px) {
+    .stat .value { font-size: 22px; }
+    .question-text { font-size: 16px; }
+    .option { font-size: 14.5px; padding: 12px 14px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">AZExams</div>
+  <div class="header-actions">
+    <button id="folderBtn" title="Save folder">📁</button>
+    <button id="packBtn" title="Packs">📦</button>
+    <nav class="top-nav">
+      <button data-tab="home" class="active">Home</button>
+      <button data-tab="study">Study</button>
+      <button data-tab="quiz">Quiz</button>
+      <button data-tab="report">Report</button>
+      <button data-tab="bank">Bank</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- HOME -->
+  <section id="home" class="active">
+    <div class="banner install-banner" id="installBanner">
+      <span class="icon">📲</span>
+      <div style="flex:1;">
+        <strong>Install AZExams</strong><br>
+        Add to home screen for full-screen, offline access.
+        <button class="ghost" id="installBtn" style="margin-top: 8px; padding: 6px 14px; min-height: 34px;">Install</button>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>Storage</h2>
+      <p class="sub" id="storageStatus">Checking storage...</p>
+      <div class="row" id="storageActions">
+        <button class="secondary" id="pickFolderBtn">📁 Choose Save Folder</button>
+        <button class="secondary" id="reloadFolderBtn" style="display:none;">🔄 Reload from Folder</button>
+      </div>
+      <p class="field-hint" style="margin-top: 12px;">
+        Save folder = all packs stored as real <code>.json</code> files on your device.
+        Unlimited storage, survives browser reset, no server.
+      </p>
+    </div>
+    
+    <div class="card">
+      <h2>Load Notes</h2>
+      <p class="sub">Paste markdown notes from any AI. They'll save with the active pack.</p>
+      <label class="field-label">📖 Notes (Markdown)</label>
+      <textarea id="notesInput" class="notes-area" autocapitalize="sentences" placeholder="# Polity — Fundamental Rights
+
+## Article 17
+- **Abolishes untouchability**
+- Forbids its practice in any form"></textarea>
+      <label class="field-label" style="margin-top: 20px;">Topic / Exam (optional)</label>
+      <textarea id="notesTopicInput" style="min-height: 46px; height: 46px; padding: 12px 14px; resize: none;" autocapitalize="sentences" placeholder="e.g. Polity · SSC CGL"></textarea>
+      <div class="row tight">
+        <button class="secondary" id="loadNotesBtn">Load Notes</button>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>Load Questions</h2>
+      <p class="sub">Paste JSON. Include a <code>notes</code> field to load notes together.</p>
+      <textarea id="jsonInput" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder='{
+  "exam": "SSC CGL",
+  "topic": "Polity",
+  "notes": "# Polity Notes...",
+  "default_time_sec": 45,
+  "questions": [
+    {
+      "type": "MCQ",
+      "subtopic": "Fundamental Rights",
+      "difficulty": "medium",
+      "question": "Which Article abolishes untouchability?",
+      "correct": ["Article 17"],
+      "distractors": ["Article 14", "Article 15", "Article 19", "Article 21"],
+      "explanation": "Article 17 abolishes untouchability."
+    }
+  ]
+}'></textarea>
+      <div class="row">
+        <button class="primary" id="loadBtn">Load JSON</button>
+        <button class="secondary" id="startBtn">Start Quiz →</button>
+      </div>
+    </div>
+    
+    <div class="card" id="sessionCard" style="display:none;">
+      <h2>Active Pack: <span id="activePackName" style="color: var(--accent);">—</span></h2>
+      <div class="stat-grid" style="grid-template-columns: repeat(2, 1fr);">
+        <div class="stat"><div class="value" id="sessionTotal">0</div><div class="label">Questions</div></div>
+        <div class="stat"><div class="value" id="sessionNotes">0</div><div class="label">Note Sets</div></div>
+        <div class="stat"><div class="value" id="sessionCorrect">0</div><div class="label">Correct</div></div>
+        <div class="stat"><div class="value" id="sessionWeak">0</div><div class="label">Weak</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STUDY -->
+  <section id="study">
+    <div id="studyEmpty" class="empty">
+      <div class="icon">📖</div>
+      <p>No notes yet.</p>
+      <p>Paste notes on Home to start.</p>
+      <button class="primary cta" id="studyGoHome">Go to Home</button>
+    </div>
+    <div id="studyActive" style="display:none;">
+      <div class="chips" id="notesChips"></div>
+      <div class="notes-header">
+        <div class="title" id="noteTitle">—</div>
+        <div class="meta" id="noteMeta">—</div>
+      </div>
+      <div class="notes-content" id="notesContent"></div>
+      <div class="study-footer">
+        <button class="primary" id="startQuizFromNotes">Start Quiz →</button>
+        <button class="ghost" id="deleteNoteBtn" style="flex: 0 0 auto; min-width: 80px;">🗑</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz">
+    <div id="quizEmpty" class="empty">
+      <div class="icon">📚</div>
+      <p>No questions loaded yet.</p>
+      <button class="primary cta" id="quizGoHome">Go to Home</button>
+    </div>
+    <div id="quizActive" style="display:none;">
+      <div class="quiz-shell">
+        <div class="quiz-topbar">
+          <div class="progress-inline">
+            <span class="stat-mini c">✅ <span id="pbCorrect">0</span></span>
+            <span class="stat-mini w">❌ <span id="pbWrong">0</span></span>
+            <span class="stat-mini"><span id="pbPct">0</span>%</span>
+          </div>
+          <div class="topbar-actions">
+            <button class="peek-btn" id="peekBtn" title="Notes">📖</button>
+            <div class="timer-badge" id="qTimerBadge">⏱ <span id="qTimer">45</span>s</div>
+          </div>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-meta">
+            <span class="pill" id="qTopic">Topic</span>
+            <span class="pill" id="qSubtopic">Subtopic</span>
+            <span class="pill" id="qDiff">medium</span>
+            <span class="pill" id="qType">MCQ</span>
+            <span class="pill weak" id="qWeakFlag" style="display:none;">WEAK</span>
+          </div>
+          <div class="timer-bar"><div class="timer-fill" id="timerFill" style="width:100%"></div></div>
+          <div class="question-text" id="qText">—</div>
+          <div class="options" id="options"></div>
+          <div id="feedback" class="feedback" style="display:none;"></div>
+        </div>
+        <div class="quiz-actions">
+          <button class="primary" id="submitBtn" disabled>Submit</button>
+          <button class="secondary" id="skipBtn">Skip</button>
+          <button class="primary" id="nextBtn" style="display:none;">Next →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REPORT -->
+  <section id="report">
+    <div id="reportEmpty" class="empty">
+      <div class="icon">📊</div>
+      <p>No data yet.</p>
+    </div>
+    <div id="reportContent" style="display:none;"></div>
+  </section>
+
+  <!-- BANK -->
+  <section id="bank">
+    <div class="card">
+      <h2>Library</h2>
+      <p class="sub" id="bankSummary">—</p>
+      <div class="row">
+        <button class="secondary" id="exportBtn">Export Backup</button>
+        <button class="danger" id="resetStateBtn">Reset Progress</button>
+      </div>
+    </div>
+    <div id="notesList"></div>
+    <div id="bankList"></div>
+  </section>
+
+</main>
+
+<nav class="bottom-nav">
+  <button data-tab="home" class="active"><span class="icon">🏠</span>Home</button>
+  <button data-tab="study"><span class="icon">📖</span>Study</button>
+  <button data-tab="quiz"><span class="icon">📝</span>Quiz</button>
+  <button data-tab="report"><span class="icon">📊</span>Report</button>
+  <button data-tab="bank"><span class="icon">📚</span>Bank</button>
+</nav>
+
+<!-- PACK MODAL -->
+<div class="modal" id="packModal">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h3>📦 Packs</h3>
+      <button class="modal-close" id="packModalClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color: var(--muted); font-size: 14px; margin-bottom: 16px;">
+        Each pack = separate notes + questions + progress. Saved as <code>.json</code> files in your folder.
+      </p>
+      <div id="packList"></div>
+      <button class="primary" id="newPackBtn" style="margin-top: 16px;">+ Create New Pack</button>
+    </div>
+  </div>
+</div>
+
+<!-- NOTES MODAL -->
+<div class="modal" id="notesModal">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h3 id="modalTitle">📖 Notes</h3>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="notes-content" id="modalContent"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════════════════════════
+const SETTINGS_KEY = 'azexams_settings_v1';
+const LAST_PACK_KEY = 'azexams_last_pack';
+const IDB_HANDLE_KEY = 'packsDir';
+const IDB_NAME = 'azexams_handles';
+const IDB_STORE = 'handles';
+
+const supportsFSA = 'showDirectoryPicker' in window;
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+let packs = {};              // {id: pack}
+let currentPackId = null;
+let state = null;            // alias to packs[currentPackId]
+let dirHandle = null;
+let current = null;
+let timer = null;
+let timeLeft = 0;
+let deferredInstall = null;
+
+// ═══════════════════════════════════════════════════════════════
+// INDEXEDDB (just for storing folder handle)
+// ═══════════════════════════════════════════════════════════════
+function idbOpen() {
+  return new Promise((res, rej) => {
+    const req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(IDB_STORE)) db.createObjectStore(IDB_STORE);
+    };
+    req.onsuccess = () => res(req.result);
+    req.onerror = () => rej(req.error);
+  });
+}
+async function idbSet(key, val) {
+  const db = await idbOpen();
+  return new Promise((res, rej) => {
+    const tx = db.transaction(IDB_STORE, 'readwrite');
+    tx.objectStore(IDB_STORE).put(val, key);
+    tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+  });
+}
+async function idbGet(key) {
+  const db = await idbOpen();
+  return new Promise((res, rej) => {
+    const tx = db.transaction(IDB_STORE, 'readonly');
+    const req = tx.objectStore(IDB_STORE).get(key);
+    req.onsuccess = () => res(req.result);
+    req.onerror = () => rej(req.error);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FILE SYSTEM ACCESS
+// ═══════════════════════════════════════════════════════════════
+function sanitizeFilename(s) {
+  return s.replace(/[^a-z0-9_\- ]/gi, '_').trim().slice(0, 80) || 'pack';
+}
+
+async function pickFolder() {
+  if (!supportsFSA) { toast('Your browser does not support folder access', 'error'); return; }
+  try {
+    const handle = await window.showDirectoryPicker({ mode: 'readwrite', id: 'azexams' });
+    dirHandle = handle;
+    await idbSet(IDB_HANDLE_KEY, handle);
+    toast('📁 Folder set — packs will save there', 'success');
+    await syncAllPacksToDisk();
+    updateStorageStatus();
+  } catch (e) {
+    if (e.name !== 'AbortError') toast('Folder selection cancelled', 'error');
+  }
+}
+
+async function ensurePermission(handle, request = true) {
+  if (!handle) return false;
+  const opts = { mode: 'readwrite' };
+  if (await handle.queryPermission(opts) === 'granted') return true;
+  if (request && await handle.requestPermission(opts) === 'granted') return true;
+  return false;
+}
+
+async function loadPacksFromDisk() {
+  if (!dirHandle) return null;
+  if (!await ensurePermission(dirHandle)) return null;
+  const result = {};
+  try {
+    for await (const entry of dirHandle.values()) {
+      if (entry.kind !== 'file') continue;
+      if (!entry.name.endsWith('.json')) continue;
+      if (entry.name.startsWith('_')) continue;
+      try {
+        const file = await entry.getFile();
+        const text = await file.text();
+        const pack = JSON.parse(text);
+        if (pack && pack.id && pack.name) result[pack.id] = pack;
+      } catch (err) { console.error('Load failed', entry.name, err); }
+    }
+  } catch (err) { console.error(err); return null; }
+  return result;
+}
+
+async function savePackToDisk(pack) {
+  if (!dirHandle) return false;
+  if (!await ensurePermission(dirHandle, false)) return false;
+  try {
+    const name = sanitizeFilename(pack.name) + '.json';
+    const fileHandle = await dirHandle.getFileHandle(name, { create: true });
+    const w = await fileHandle.createWritable();
+    await w.write(JSON.stringify(pack, null, 2));
+    await w.close();
+    return true;
+  } catch (e) { console.error('Save failed', e); return false; }
+}
+
+async function syncAllPacksToDisk() {
+  if (!dirHandle) return;
+  for (const pack of Object.values(packs)) {
+    await savePackToDisk(pack);
+  }
+}
+
+async function deletePackFromDisk(pack) {
+  if (!dirHandle) return;
+  if (!await ensurePermission(dirHandle, false)) return;
+  try {
+    await dirHandle.removeEntry(sanitizeFilename(pack.name) + '.json');
+  } catch (e) { /* file may not exist */ }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PACK MANAGEMENT
+// ═══════════════════════════════════════════════════════════════
+function freshMeta() {
+  return {
+    shown: 0, correct: 0, wrong: 0,
+    correctStreak: 0, lastRating: null,
+    nextDueAt: 0, status: 'new',
+    lastCorrectSlot: undefined, seenDistractors: [],
+  };
+}
+
+function freshPack(name) {
+  return {
+    id: 'pack_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+    name: name || 'Untitled Pack',
+    bank: [], meta: {}, notes: [],
+    position: 0,
+    session: { correct: 0, wrong: 0, started: Date.now() },
+    settings: { default_time_sec: 45 },
+    preferSubtopic: null,
+    activeNoteId: null,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  };
+}
+
+function setActivePack(id) {
+  if (!packs[id]) return;
+  currentPackId = id;
+  state = packs[id];
+  if (!state.session) state.session = { correct: 0, wrong: 0, started: Date.now() };
+  if (!state.session.started) state.session.started = Date.now();
+  if (!state.meta) state.meta = {};
+  if (!state.notes) state.notes = [];
+  if (!state.bank) state.bank = [];
+  localStorage.setItem(LAST_PACK_KEY, id);
+}
+
+function persist() {
+  if (!state) return;
+  state.updatedAt = Date.now();
+  packs[currentPackId] = state;
+  savePackToDisk(state);  // async, fire-and-forget
+}
+
+function createPack(name) {
+  const p = freshPack(name || `Pack ${Object.keys(packs).length + 1}`);
+  packs[p.id] = p;
+  setActivePack(p.id);
+  persist();
+  refreshAllViews();
+  toast(`📦 Created "${p.name}"`, 'success');
+}
+
+function switchPack(id) {
+  persist();
+  setActivePack(id);
+  savePackToDisk(state);
+  refreshAllViews();
+  toast(`📦 Switched to "${state.name}"`, 'success');
+}
+
+function deletePack(id) {
+  if (Object.keys(packs).length <= 1) { toast('Cannot delete the only pack', 'error'); return; }
+  const p = packs[id];
+  if (!confirm(`Delete pack "${p.name}"? Cannot be undone.`)) return;
+  deletePackFromDisk(p);
+  delete packs[id];
+  if (id === currentPackId) {
+    const newId = Object.keys(packs)[0];
+    setActivePack(newId);
+  }
+  refreshAllViews();
+  renderPackList();
+  toast('Pack deleted', 'success');
+}
+
+function duplicatePack(id) {
+  const p = packs[id];
+  if (!p) return;
+  const clone = JSON.parse(JSON.stringify(p));
+  clone.id = 'pack_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+  clone.name = clone.name + ' (copy)';
+  clone.createdAt = Date.now();
+  clone.updatedAt = Date.now();
+  for (const q of clone.bank || []) {
+    if (clone.meta[q._id]) clone.meta[q._id] = freshMeta();
+  }
+  clone.session = { correct: 0, wrong: 0, started: Date.now() };
+  clone.position = 0;
+  packs[clone.id] = clone;
+  savePackToDisk(clone);
+  renderPackList();
+  toast('Pack duplicated', 'success');
+}
+
+function renamePack(id, newName) {
+  const p = packs[id];
+  if (!p) return;
+  const oldName = p.name;
+  p.name = newName;
+  // Save new file, optionally remove old
+  savePackToDisk(p);
+  if (oldName !== newName) {
+    dirHandle?.removeEntry(sanitizeFilename(oldName) + '.json').catch(() => {});
+  }
+  if (id === currentPackId) state.name = newName;
+  renderPackList();
+  refreshAllViews();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════════════════════
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function hash(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+  return Math.abs(h).toString(36);
+}
+function qid(q) { return q._id || hash(q.question + '|' + (q.subtopic || '')); }
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function toast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + type;
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.className = 'toast ' + type, 2400);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MARKDOWN
+// ═══════════════════════════════════════════════════════════════
+function inlineMd(text) {
+  text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  text = text.replace(/__(.+?)__/g, '<strong>$1</strong>');
+  text = text.replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>');
+  text = text.replace(/(?<!_)_(?!_)(.+?)(?<!_)_(?!_)/g, '<em>$1</em>');
+  text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+  return text;
+}
+function renderMarkdown(text) {
+  if (!text) return '';
+  let src = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const lines = src.split('\n');
+  const out = [];
+  let listType = null;
+  const closeList = () => { if (listType) { out.push(`</${listType}>`); listType = null; } };
+  for (const raw of lines) {
+    const line = raw.replace(/\s+$/, '');
+    const isUl = /^\s*[-*]\s+/.test(line);
+    const isOl = /^\s*\d+\.\s+/.test(line);
+    const isH1 = /^#\s+/.test(line);
+    const isH2 = /^##\s+/.test(line);
+    const isH3 = /^###\s+/.test(line);
+    const isH4 = /^####\s+/.test(line);
+    const isHr = /^---+\s*$/.test(line);
+    const isQuote = /^>\s+/.test(line);
+    if (isH1 || isH2 || isH3 || isH4 || isHr) closeList();
+    if (isHr) { out.push('<hr>'); continue; }
+    if (isH4) { out.push(`<h4>${inlineMd(line.replace(/^####\s+/, ''))}</h4>`); continue; }
+    if (isH3) { out.push(`<h3>${inlineMd(line.replace(/^###\s+/, ''))}</h3>`); continue; }
+    if (isH2) { out.push(`<h2>${inlineMd(line.replace(/^##\s+/, ''))}</h2>`); continue; }
+    if (isH1) { out.push(`<h2>${inlineMd(line.replace(/^#\s+/, ''))}</h2>`); continue; }
+    if (isQuote) { closeList(); out.push(`<blockquote>${inlineMd(line.replace(/^>\s+/, ''))}</blockquote>`); continue; }
+    if (isUl) { if (listType !== 'ul') { closeList(); out.push('<ul>'); listType = 'ul'; } out.push(`<li>${inlineMd(line.replace(/^\s*[-*]\s+/, ''))}</li>`); continue; }
+    if (isOl) { if (listType !== 'ol') { closeList(); out.push('<ol>'); listType = 'ol'; } out.push(`<li>${inlineMd(line.replace(/^\s*\d+\.\s+/, ''))}</li>`); continue; }
+    if (!line.trim()) { closeList(); continue; }
+    closeList();
+    out.push(`<p>${inlineMd(line)}</p>`);
+  }
+  closeList();
+  return out.join('\n');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NOTES
+// ═══════════════════════════════════════════════════════════════
+function saveNote(topic, exam, content) {
+  if (!content || !content.trim()) return null;
+  const t = (topic || 'Untitled').trim();
+  const e = (exam || '').trim();
+  const id = hash(t + '|' + e);
+  let note = state.notes.find(n => n.id === id);
+  if (note) {
+    note.content = content;
+    note.addedAt = Date.now();
+  } else {
+    note = { id, topic: t, exam: e, content, addedAt: Date.now() };
+    state.notes.push(note);
+  }
+  return note;
+}
+
+function loadNotesOnly() {
+  const content = document.getElementById('notesInput').value.trim();
+  if (!content) { toast('Paste notes first', 'error'); return; }
+  const topicRaw = document.getElementById('notesTopicInput').value.trim();
+  let topic = topicRaw, exam = '';
+  if (topicRaw.includes('·')) {
+    const parts = topicRaw.split('·').map(s => s.trim());
+    topic = parts[0] || 'Untitled';
+    exam = parts[1] || '';
+  }
+  const note = saveNote(topic, exam, content);
+  if (!note) { toast('Invalid note', 'error'); return; }
+  state.activeNoteId = note.id;
+  persist();
+  document.getElementById('notesInput').value = '';
+  document.getElementById('notesTopicInput').value = '';
+  toast(`✅ Notes loaded: "${note.topic}"`, 'success');
+  updateHomeStats();
+  renderBank();
+  renderNotesChips();
+}
+
+function deleteNote(id) {
+  if (!confirm('Delete this note?')) return;
+  state.notes = state.notes.filter(n => n.id !== id);
+  if (state.activeNoteId === id) state.activeNoteId = state.notes[0]?.id || null;
+  persist();
+  renderNotesChips();
+  renderStudy();
+  renderBank();
+  updateHomeStats();
+  toast('Note deleted', 'success');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// JSON LOADING
+// ═══════════════════════════════════════════════════════════════
+function loadJSON() {
+  const raw = document.getElementById('jsonInput').value.trim();
+  if (!raw) { toast('Paste JSON first', 'error'); return; }
+  let data;
+  try { data = JSON.parse(raw); } catch (e) { toast('Invalid JSON: ' + e.message, 'error'); return; }
+  
+  let questions = [], defaultTime = state.settings.default_time_sec;
+  let topTopic = 'General', topExam = '', notesContent = null;
+  
+  if (Array.isArray(data)) questions = data;
+  else if (data && Array.isArray(data.questions)) {
+    questions = data.questions;
+    if (data.default_time_sec) defaultTime = data.default_time_sec;
+    if (data.topic) topTopic = data.topic;
+    if (data.exam) topExam = data.exam;
+    if (data.notes) notesContent = String(data.notes);
+  } else { toast('JSON must be array or have "questions"', 'error'); return; }
+  
+  let noteLoaded = false;
+  if (notesContent) {
+    const note = saveNote(topTopic, topExam, notesContent);
+    if (note) { noteLoaded = true; state.activeNoteId = note.id; }
+  }
+  
+  let added = 0, skipped = 0, invalid = 0;
+  const existingIds = new Set(state.bank.map(q => qid(q)));
+  for (const q of questions) {
+    if (!q.question || !Array.isArray(q.correct) || !q.correct.length) { invalid++; continue; }
+    if (q.type !== 'TF' && (!Array.isArray(q.distractors) || q.distractors.length < 2)) { invalid++; continue; }
+    const id = qid(q);
+    if (existingIds.has(id)) { skipped++; continue; }
+    state.bank.push({
+      _id: id,
+      type: q.type || 'MCQ',
+      topic: q.topic || topTopic,
+      subtopic: q.subtopic || 'General',
+      difficulty: q.difficulty || 'medium',
+      question: String(q.question),
+      correct: q.correct.map(String),
+      distractors: (q.distractors || []).map(String),
+      explanation: q.explanation || '',
+      time_sec: q.time_sec || defaultTime,
+    });
+    existingIds.add(id);
+    added++;
+  }
+  for (const q of state.bank) if (!state.meta[q._id]) state.meta[q._id] = freshMeta();
+  persist();
+  toast(`Loaded +${added} new · ${skipped} dup · ${invalid} invalid${noteLoaded ? ' · notes' : ''}`, 'success');
+  document.getElementById('jsonInput').value = '';
+  updateHomeStats();
+  renderBank();
+  renderNotesChips();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ADAPTIVE ENGINE
+// ═══════════════════════════════════════════════════════════════
+function pickNextQuestion() {
+  const pos = state.position;
+  if (state.preferSubtopic) {
+    const fresh = state.bank.filter(q => state.meta[q._id].shown === 0 && q.subtopic === state.preferSubtopic);
+    state.preferSubtopic = null;
+    if (fresh.length) return fresh[0];
+  }
+  const due = state.bank.filter(q => {
+    const m = state.meta[q._id];
+    return m.status !== 'retired' && m.nextDueAt <= pos;
+  });
+  if (due.length) {
+    due.sort((a, b) => {
+      const wa = state.meta[a._id].status === 'weak' ? 0 : 1;
+      const wb = state.meta[b._id].status === 'weak' ? 0 : 1;
+      if (wa !== wb) return wa - wb;
+      return state.meta[a._id].nextDueAt - state.meta[b._id].nextDueAt;
+    });
+    return due[0];
+  }
+  const fresh = state.bank.filter(q => state.meta[q._id].shown === 0);
+  if (fresh.length) return shuffle(fresh)[0];
+  const active = state.bank.filter(q => state.meta[q._id].status !== 'retired');
+  if (!active.length) return null;
+  active.sort((a, b) => state.meta[a._id].nextDueAt - state.meta[b._id].nextDueAt);
+  return active[0];
+}
+
+function rotateOptions(q) {
+  const m = state.meta[q._id];
+  if (q.type === 'TF') {
+    const options = ['True', 'False'];
+    return { options, correctIndices: q.correct.map(c => options.indexOf(c)).filter(i => i >= 0) };
+  }
+  const pool = q.distractors.filter(d => !m.seenDistractors.includes(d));
+  const fallback = q.distractors;
+  const needWrong = q.type === 'MSQ' ? 2 + Math.floor(Math.random() * 2) : 3;
+  const source = pool.length >= needWrong ? pool : fallback;
+  const chosenWrong = shuffle(source).slice(0, Math.min(needWrong, source.length));
+  m.seenDistractors = [...chosenWrong, ...m.seenDistractors].slice(0, 5);
+  let options = shuffle([...q.correct, ...chosenWrong]);
+  let correctIndices = q.correct.map(c => options.indexOf(c));
+  if (q.type === 'MCQ' && options.length > 1 && m.lastCorrectSlot !== undefined) {
+    if (correctIndices[0] === m.lastCorrectSlot) {
+      const swapWith = (correctIndices[0] + 1) % options.length;
+      [options[correctIndices[0]], options[swapWith]] = [options[swapWith], options[correctIndices[0]]];
+      correctIndices = [swapWith];
+    }
+  }
+  if (q.type === 'MCQ') m.lastCorrectSlot = correctIndices[0];
+  return { options, correctIndices };
+}
+
+function recordAnswer(q, isCorrect, rating) {
+  const m = state.meta[q._id];
+  const pos = state.position;
+  if (isCorrect) {
+    m.correct++; m.correctStreak++; m.lastRating = rating;
+    if (m.correctStreak === 1) m.nextDueAt = pos + 3;
+    else if (m.correctStreak === 2) m.nextDueAt = pos + 6;
+    else { m.nextDueAt = pos + 9999; m.status = 'retired'; return; }
+    if (m.status !== 'weak') m.status = 'active';
+  } else {
+    m.wrong++; m.correctStreak = 0; m.lastRating = rating;
+    m.nextDueAt = pos + 3;
+    if (m.wrong >= 2) m.status = 'weak';
+    else m.status = 'active';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// QUIZ
+// ═══════════════════════════════════════════════════════════════
+function startQuiz() {
+  if (!state.bank.length) { toast('Load questions first', 'error'); return; }
+  switchTab('quiz');
+  serveNext();
+}
+
+function serveNext() {
+  clearInterval(timer);
+  const q = pickNextQuestion();
+  if (!q) {
+    document.getElementById('quizActive').style.display = 'none';
+    const empty = document.getElementById('quizEmpty');
+    empty.style.display = 'block';
+    empty.innerHTML = '<div class="icon">🎉</div><p>All mastered!</p>';
+    return;
+  }
+  state.position++;
+  state.meta[q._id].shown++;
+  persist();
+  const { options, correctIndices } = rotateOptions(q);
+  current = { question: q, options, correctIndices, selected: new Set(), answered: false };
+  renderQuestion();
+  startTimer(q.time_sec || state.settings.default_time_sec);
+}
+
+function renderQuestion() {
+  const { question: q, options } = current;
+  const m = state.meta[q._id];
+  document.getElementById('quizEmpty').style.display = 'none';
+  document.getElementById('quizActive').style.display = 'block';
+  document.getElementById('qTopic').textContent = q.topic;
+  document.getElementById('qSubtopic').textContent = q.subtopic;
+  const diff = document.getElementById('qDiff');
+  diff.textContent = q.difficulty;
+  diff.className = 'pill ' + q.difficulty;
+  document.getElementById('qType').textContent = q.type;
+  document.getElementById('qWeakFlag').style.display = m.status === 'weak' ? '' : 'none';
+  const hasNotes = state.notes.some(n => n.topic === q.topic);
+  document.getElementById('peekBtn').style.display = hasNotes ? '' : 'none';
+  document.getElementById('qText').textContent = q.question;
+  const optEl = document.getElementById('options');
+  optEl.innerHTML = '';
+  options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'option';
+    btn.innerHTML = `<span class="num">${i + 1}</span><span>${escapeHtml(opt)}</span>`;
+    btn.addEventListener('click', () => selectOption(i));
+    optEl.appendChild(btn);
+  });
+  document.getElementById('feedback').style.display = 'none';
+  document.getElementById('submitBtn').style.display = '';
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('skipBtn').style.display = '';
+  document.getElementById('nextBtn').style.display = 'none';
+  updateProgressBar();
+}
+
+function selectOption(i) {
+  if (!current || current.answered) return;
+  const q = current.question;
+  if (q.type === 'MSQ') {
+    if (current.selected.has(i)) current.selected.delete(i);
+    else current.selected.add(i);
+  } else current.selected = new Set([i]);
+  document.querySelectorAll('.option').forEach((el, idx) => el.classList.toggle('selected', current.selected.has(idx)));
+  document.getElementById('submitBtn').disabled = current.selected.size === 0;
+}
+
+function submitAnswer() {
+  if (!current || current.answered || !current.selected.size) return;
+  clearInterval(timer);
+  current.answered = true;
+  const q = current.question;
+  const selected = Array.from(current.selected).sort();
+  const correct = current.correctIndices.slice().sort();
+  const isCorrect = selected.length === correct.length && selected.every((v, i) => v === correct[i]);
+  const rating = isCorrect ? (timeLeft > (q.time_sec || 45) * 0.5 ? 5 : 4) : 2;
+  const wasNew = state.meta[q._id].shown === 1;
+  recordAnswer(q, isCorrect, rating);
+  if (isCorrect) { state.session.correct++; if (wasNew) state.preferSubtopic = q.subtopic; }
+  else state.session.wrong++;
+  persist();
+  document.querySelectorAll('.option').forEach((el, idx) => {
+    el.classList.remove('selected');
+    if (correct.includes(idx)) el.classList.add('correct');
+    else if (selected.includes(idx)) el.classList.add('wrong');
+    el.style.cursor = 'default'; el.disabled = true;
+  });
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback ' + (isCorrect ? 'correct' : 'wrong');
+  fb.style.display = 'block';
+  fb.innerHTML = `<div class="verdict">${isCorrect ? '✅ Correct!' : '❌ Wrong'}</div>
+    <div class="why"><strong>Correct:</strong> ${q.correct.map(escapeHtml).join('; ')}<br><br>${q.explanation ? escapeHtml(q.explanation) : ''}</div>`;
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('skipBtn').style.display = 'none';
+  document.getElementById('nextBtn').style.display = '';
+  updateProgressBar();
+}
+
+function skipQuestion() {
+  if (!current || current.answered) return;
+  clearInterval(timer);
+  current.answered = true;
+  serveNext();
+}
+
+function startTimer(seconds) {
+  timeLeft = seconds;
+  const total = seconds;
+  const fill = document.getElementById('timerFill');
+  const label = document.getElementById('qTimer');
+  const badge = document.getElementById('qTimerBadge');
+  function render() {
+    const pct = Math.max(0, (timeLeft / total) * 100);
+    fill.style.width = pct + '%';
+    fill.className = 'timer-fill' + (pct < 20 ? ' danger' : pct < 50 ? ' warn' : '');
+    label.textContent = Math.max(0, timeLeft);
+    badge.className = 'timer-badge' + (timeLeft <= 5 ? ' danger' : timeLeft <= total * 0.4 ? ' warn' : '');
+  }
+  render();
+  clearInterval(timer);
+  timer = setInterval(() => {
+    timeLeft--;
+    render();
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      if (current && !current.answered) { current.selected = new Set(); submitAnswer(); }
+    }
+  }, 1000);
+}
+
+function updateProgressBar() {
+  const c = state.session.correct, w = state.session.wrong, t = c + w;
+  document.getElementById('pbCorrect').textContent = c;
+  document.getElementById('pbWrong').textContent = w;
+  document.getElementById('pbPct').textContent = t ? Math.round((c / t) * 100) : 0;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STUDY
+// ═══════════════════════════════════════════════════════════════
+function renderNotesChips() {
+  const chips = document.getElementById('notesChips');
+  if (!state.notes.length) { chips.innerHTML = ''; return; }
+  chips.innerHTML = state.notes.map(n => {
+    const active = n.id === state.activeNoteId ? ' active' : '';
+    const label = n.exam ? `${n.topic} · ${n.exam}` : n.topic;
+    return `<button class="chip${active}" data-note-id="${n.id}">${escapeHtml(label)}</button>`;
+  }).join('');
+  chips.querySelectorAll('.chip').forEach(c => {
+    c.addEventListener('click', () => {
+      state.activeNoteId = c.dataset.noteId;
+      persist();
+      renderNotesChips();
+      renderStudy();
+    });
+  });
+}
+
+function renderStudy() {
+  const empty = document.getElementById('studyEmpty');
+  const active = document.getElementById('studyActive');
+  if (!state.notes.length) { empty.style.display = 'block'; active.style.display = 'none'; return; }
+  empty.style.display = 'none'; active.style.display = 'block';
+  if (!state.activeNoteId || !state.notes.find(n => n.id === state.activeNoteId)) {
+    state.activeNoteId = state.notes[0].id;
+  }
+  const note = state.notes.find(n => n.id === state.activeNoteId);
+  if (!note) { empty.style.display = 'block'; active.style.display = 'none'; return; }
+  document.getElementById('noteTitle').textContent = note.topic;
+  const meta = [];
+  if (note.exam) meta.push(note.exam);
+  meta.push(`Updated ${new Date(note.addedAt).toLocaleDateString()}`);
+  const qCount = state.bank.filter(q => q.topic === note.topic).length;
+  meta.push(`${qCount} question${qCount !== 1 ? 's' : ''}`);
+  document.getElementById('noteMeta').textContent = meta.join(' · ');
+  document.getElementById('notesContent').innerHTML = renderMarkdown(note.content);
+  const btn = document.getElementById('startQuizFromNotes');
+  btn.disabled = qCount === 0;
+  btn.textContent = qCount === 0 ? 'No questions yet' : `Start Quiz (${qCount}) →`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NOTES MODAL
+// ═══════════════════════════════════════════════════════════════
+function openNotesModal(topic) {
+  const note = state.notes.find(n => n.topic === topic);
+  if (!note) { toast('No notes for this topic', 'error'); return; }
+  document.getElementById('modalTitle').textContent = '📖 ' + note.topic + (note.exam ? ' · ' + note.exam : '');
+  document.getElementById('modalContent').innerHTML = renderMarkdown(note.content);
+  document.getElementById('notesModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeNotesModal() {
+  document.getElementById('notesModal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// REPORT
+// ═══════════════════════════════════════════════════════════════
+function renderReport() {
+  const content = document.getElementById('reportContent');
+  const empty = document.getElementById('reportEmpty');
+  const answered = state.bank.filter(q => state.meta[q._id].shown > 0);
+  if (!answered.length) { empty.style.display = 'block'; content.style.display = 'none'; return; }
+  empty.style.display = 'none'; content.style.display = 'block';
+  let totalCorrect = 0, totalWrong = 0;
+  const byTopic = {}, bySubtopic = {}, byType = {}, byDiff = {};
+  for (const q of state.bank) {
+    const m = state.meta[q._id];
+    totalCorrect += m.correct; totalWrong += m.wrong;
+    const add = (obj, k) => { obj[k] = obj[k] || { c: 0, w: 0 }; obj[k].c += m.correct; obj[k].w += m.wrong; };
+    add(byTopic, q.topic); add(bySubtopic, q.topic + ' › ' + q.subtopic);
+    add(byType, q.type); add(byDiff, q.difficulty);
+  }
+  const total = totalCorrect + totalWrong;
+  const pct = total ? (totalCorrect / total) * 100 : 0;
+  const grade = pct >= 90 ? 'A+' : pct >= 80 ? 'A' : pct >= 70 ? 'B' : pct >= 60 ? 'C' : pct >= 50 ? 'D' : 'F';
+  let weak = 0, active = 0, retired = 0, fresh = 0;
+  for (const q of state.bank) {
+    const m = state.meta[q._id];
+    if (m.shown === 0) fresh++;
+    else if (m.status === 'weak') weak++;
+    else if (m.status === 'retired') retired++;
+    else active++;
+  }
+  content.innerHTML = `
+    <div class="card">
+      <h2>📊 Report</h2>
+      <p class="sub">${state.name} · ${new Date().toLocaleString()}</p>
+      <div class="stat-grid">
+        <div class="stat"><div class="value">${total}</div><div class="label">Attempts</div></div>
+        <div class="stat"><div class="value">${totalCorrect}</div><div class="label">Correct</div></div>
+        <div class="stat"><div class="value">${totalWrong}</div><div class="label">Wrong</div></div>
+        <div class="stat"><div class="value">${pct.toFixed(0)}%</div><div class="label">Accuracy</div></div>
+        <div class="stat"><div class="value">${grade}</div><div class="label">Grade</div></div>
+      </div>
+      <div class="bar-visual">
+        <div class="bar-seg" style="background: var(--green); width: ${pct}%;"></div>
+        <div class="bar-seg" style="background: var(--red); width: ${100 - pct}%;"></div>
+      </div>
+    </div>
+    <div class="card"><h3>By Topic</h3>${table(byTopic)}</div>
+    <div class="card"><h3>By Subtopic</h3>${table(bySubtopic)}</div>
+    <div class="card"><h3>By Type</h3>${table(byType)}</div>
+    <div class="card"><h3>By Difficulty</h3>${table(byDiff)}</div>
+    <div class="card">
+      <h3>Status</h3>
+      <div class="stat-grid" style="grid-template-columns: repeat(2,1fr);">
+        <div class="stat"><div class="value">${fresh}</div><div class="label">Not Shown</div></div>
+        <div class="stat"><div class="value">${active}</div><div class="label">Active</div></div>
+        <div class="stat"><div class="value" style="color:var(--red);">${weak}</div><div class="label">Weak</div></div>
+        <div class="stat"><div class="value" style="color:var(--green);">${retired}</div><div class="label">Retired</div></div>
+      </div>
+    </div>
+    <div class="card"><h3>Weak Areas</h3>${weakList(bySubtopic)}</div>`;
+}
+function table(obj) {
+  const rows = Object.entries(obj).map(([k, v]) => {
+    const t = v.c + v.w;
+    const pct = t ? (v.c / t) * 100 : 0;
+    const icon = pct >= 80 ? '🟢' : pct >= 60 ? '🟡' : '🔴';
+    return `<tr><td style="font-size:13px;">${escapeHtml(k)}</td><td>${t}</td><td>${v.c}</td><td>${pct.toFixed(0)}% ${icon}</td></tr>`;
+  }).join('');
+  return `<table><thead><tr><th>Name</th><th>Att</th><th>✓</th><th>Acc</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function weakList(bySub) {
+  const weak = Object.entries(bySub)
+    .map(([k, v]) => { const t = v.c + v.w; return { name: k, pct: t ? (v.c/t)*100 : 100, total: t }; })
+    .filter(x => x.total >= 2 && x.pct < 70)
+    .sort((a, b) => a.pct - b.pct)
+    .slice(0, 8);
+  if (!weak.length) return '<p style="color:var(--muted); font-size:14px;">No weak areas yet.</p>';
+  return weak.map((w, i) => `<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:10px;">
+    <div style="flex:1;font-size:14px;">${i+1}. ${escapeHtml(w.name)}</div>
+    <div style="color:var(--red);font-weight:700;font-size:14px;">${w.pct.toFixed(0)}%</div></div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BANK
+// ═══════════════════════════════════════════════════════════════
+function renderBank() {
+  const summary = document.getElementById('bankSummary');
+  const list = document.getElementById('bankList');
+  const notesList = document.getElementById('notesList');
+  const total = state.bank.length, noteCount = state.notes.length;
+  if (!total && !noteCount) {
+    summary.textContent = 'Nothing loaded yet';
+    list.innerHTML = ''; notesList.innerHTML = ''; return;
+  }
+  summary.textContent = `${total} questions · ${noteCount} note set${noteCount !== 1 ? 's' : ''}`;
+  if (noteCount) {
+    notesList.innerHTML = `<div class="card"><h3>📖 Notes</h3>${state.notes.map(n =>
+      `<div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:10px;align-items:center;">
+        <div style="flex:1;">
+          <div style="font-weight:600;font-size:14px;">${escapeHtml(n.topic)}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">${n.exam ? escapeHtml(n.exam) + ' · ' : ''}${new Date(n.addedAt).toLocaleDateString()}</div>
+        </div>
+        <button class="ghost" data-open-note="${n.id}" style="font-size:12px;padding:6px 12px;min-height:32px;">Open</button>
+      </div>`).join('')}</div>`;
+    notesList.querySelectorAll('[data-open-note]').forEach(b => {
+      b.addEventListener('click', () => {
+        state.activeNoteId = b.dataset.openNote; persist(); switchTab('study');
+      });
+    });
+  } else notesList.innerHTML = '';
+  if (!total) { list.innerHTML = ''; return; }
+  const byTopic = {};
+  for (const q of state.bank) { byTopic[q.topic] = byTopic[q.topic] || []; byTopic[q.topic].push(q); }
+  list.innerHTML = Object.entries(byTopic).map(([topic, qs]) => {
+    const items = qs.map(q => {
+      const m = state.meta[q._id];
+      const cls = m.status === 'weak' ? 'weak' : m.status === 'retired' ? 'easy' : '';
+      return `<div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:10px;align-items:flex-start;">
+        <div style="flex:1;font-size:14px;line-height:1.5;">
+          <span class="pill ${cls}" style="font-size:10px;padding:2px 8px;">${m.status}</span>
+          <span style="margin-left:6px;color:var(--muted);font-size:12px;">${escapeHtml(q.subtopic)}</span>
+          <div style="margin-top:6px;">${escapeHtml(q.question.slice(0, 90))}${q.question.length > 90 ? '…' : ''}</div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);white-space:nowrap;">✅${m.correct} ❌${m.wrong}</div>
+      </div>`;
+    }).join('');
+    return `<div class="card"><h3>${escapeHtml(topic)} (${qs.length})</h3>${items}</div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HOME STATS
+// ═══════════════════════════════════════════════════════════════
+function updateHomeStats() {
+  const card = document.getElementById('sessionCard');
+  if (!state.bank.length && !state.notes.length) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
+  document.getElementById('activePackName').textContent = state.name;
+  document.getElementById('sessionTotal').textContent = state.bank.length;
+  document.getElementById('sessionNotes').textContent = state.notes.length;
+  document.getElementById('sessionCorrect').textContent = state.session.correct;
+  let weak = 0;
+  for (const q of state.bank) if (state.meta[q._id].status === 'weak') weak++;
+  document.getElementById('sessionWeak').textContent = weak;
+}
+
+function updateStorageStatus() {
+  const el = document.getElementById('storageStatus');
+  const pickBtn = document.getElementById('pickFolderBtn');
+  const reloadBtn = document.getElementById('reloadFolderBtn');
+  if (!supportsFSA) {
+    el.innerHTML = '⚠️ Your browser does not support folder storage. Packs save in browser memory (small, may be lost). Use Chrome on Android or desktop for file storage.';
+    pickBtn.style.display = 'none';
+    return;
+  }
+  if (dirHandle) {
+    el.innerHTML = `📁 <strong>Folder connected</strong> — packs auto-save as <code>.json</code> files. Unlimited storage.`;
+    pickBtn.textContent = '📁 Change Folder';
+    reloadBtn.style.display = '';
+  } else {
+    el.innerHTML = 'No folder set. Packs save in browser memory only. <strong>Set a folder for unlimited, permanent storage.</strong>';
+    pickBtn.textContent = '📁 Choose Save Folder';
+    reloadBtn.style.display = 'none';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB SWITCHING
+// ═══════════════════════════════════════════════════════════════
+function switchTab(name) {
+  document.querySelectorAll('nav button[data-tab]').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  document.querySelectorAll('section').forEach(s => s.classList.toggle('active', s.id === name));
+  if (name === 'report') renderReport();
+  if (name === 'bank') renderBank();
+  if (name === 'home') updateHomeStats();
+  if (name === 'study') { renderNotesChips(); renderStudy(); }
+  if (name === 'quiz' && !state.bank.length) {
+    document.getElementById('quizEmpty').style.display = 'block';
+    document.getElementById('quizActive').style.display = 'none';
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function refreshAllViews() {
+  updateHomeStats();
+  renderBank();
+  renderNotesChips();
+  renderStudy();
+  renderPackList();
+  if (document.getElementById('report').classList.contains('active')) renderReport();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PACK LIST RENDERING
+// ═══════════════════════════════════════════════════════════════
+function renderPackList() {
+  const list = document.getElementById('packList');
+  if (!list) return;
+  const entries = Object.values(packs).sort((a, b) => b.updatedAt - a.updatedAt);
+  list.innerHTML = entries.map(p => {
+    const isActive = p.id === currentPackId;
+    return `<div class="pack-item${isActive ? ' active' : ''}">
+      <div class="name">${isActive ? '✅ ' : ''}${escapeHtml(p.name)}</div>
+      <div class="info">${(p.bank||[]).length} questions · ${(p.notes||[]).length} notes · Updated ${new Date(p.updatedAt).toLocaleDateString()}</div>
+      <div class="actions">
+        ${!isActive ? `<button class="ghost" data-switch="${p.id}">Switch</button>` : ''}
+        <button class="ghost" data-rename="${p.id}">✏ Rename</button>
+        <button class="ghost" data-dup="${p.id}">📋 Copy</button>
+        <button class="danger" data-del="${p.id}">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+  list.querySelectorAll('[data-switch]').forEach(b => b.onclick = () => { switchPack(b.dataset.switch); closePackModal(); });
+  list.querySelectorAll('[data-rename]').forEach(b => b.onclick = () => {
+    const p = packs[b.dataset.rename];
+    const newName = prompt('Rename pack:', p.name);
+    if (newName && newName.trim()) renamePack(b.dataset.rename, newName.trim());
+  });
+  list.querySelectorAll('[data-dup]').forEach(b => b.onclick = () => duplicatePack(b.dataset.dup));
+  list.querySelectorAll('[data-del]').forEach(b => b.onclick = () => deletePack(b.dataset.del));
+}
+function openPackModal() { renderPackList(); document.getElementById('packModal').classList.add('show'); document.body.style.overflow = 'hidden'; }
+function closePackModal() { document.getElementById('packModal').classList.remove('show'); document.body.style.overflow = ''; }
+
+// ═══════════════════════════════════════════════════════════════
+// EXPORT / RESET
+// ═══════════════════════════════════════════════════════════════
+function exportData() {
+  const backup = { version: 3, exportedAt: new Date().toISOString(), activePackId: currentPackId, packs };
+  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `azexams-backup-${Date.now()}.json`; a.click();
+  URL.revokeObjectURL(url);
+  toast('Exported!', 'success');
+}
+function resetState() {
+  if (!confirm('Reset progress? Bank + notes stay.')) return;
+  for (const q of state.bank) state.meta[q._id] = freshMeta();
+  state.position = 0;
+  state.session = { correct: 0, wrong: 0, started: Date.now() };
+  state.preferSubtopic = null;
+  persist();
+  toast('Progress reset', 'success');
+  refreshAllViews();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PWA
+// ═══════════════════════════════════════════════════════════════
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(e => console.log('SW reg failed', e));
+  });
+}
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstall = e;
+  document.getElementById('installBanner').classList.add('show');
+});
+window.addEventListener('appinstalled', () => {
+  document.getElementById('installBanner').classList.remove('show');
+  deferredInstall = null;
+  toast('🎉 AZExams installed!', 'success');
+});
+document.getElementById('installBtn').addEventListener('click', async () => {
+  if (!deferredInstall) return;
+  deferredInstall.prompt();
+  const { outcome } = await deferredInstall.userChoice;
+  if (outcome === 'accepted') toast('Installing...', 'success');
+  deferredInstall = null;
+  document.getElementById('installBanner').classList.remove('show');
+});
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+async function init() {
+  // Try to restore folder handle
+  try {
+    dirHandle = await idbGet(IDB_HANDLE_KEY);
+    if (dirHandle) {
+      // Query permission without prompting (may be auto-granted if recently used)
+      const granted = await ensurePermission(dirHandle, false);
+      if (granted) {
+        const fromDisk = await loadPacksFromDisk();
+        if (fromDisk && Object.keys(fromDisk).length) {
+          packs = fromDisk;
+          const lastId = localStorage.getItem(LAST_PACK_KEY);
+          currentPackId = (lastId && packs[lastId]) ? lastId : Object.keys(packs)[0];
+        }
+      } else {
+        // Permission not granted; user must re-choose. Keep handle but flag.
+        console.log('Folder handle present but permission not granted');
+      }
+    }
+  } catch (e) { console.error('Init folder restore failed', e); }
+  
+  // If no packs loaded, create default
+  if (!currentPackId || !packs[currentPackId]) {
+    const p = freshPack('My First Pack');
+    packs[p.id] = p;
+    setActivePack(p.id);
+  } else {
+    setActivePack(currentPackId);
+  }
+  
+  updateStorageStatus();
+  refreshAllViews();
+  
+  // Wire up
+  document.querySelectorAll('nav button[data-tab]').forEach(b => {
+    b.addEventListener('click', () => switchTab(b.dataset.tab));
+  });
+  document.getElementById('folderBtn').addEventListener('click', () => switchTab('home'));
+  document.getElementById('packBtn').addEventListener('click', openPackModal);
+  document.getElementById('packModalClose').addEventListener('click', closePackModal);
+  document.getElementById('packModal').addEventListener('click', (e) => { if (e.target.id === 'packModal') closePackModal(); });
+  document.getElementById('newPackBtn').addEventListener('click', () => {
+    const name = prompt('New pack name:', 'New Pack');
+    if (name && name.trim()) { createPack(name.trim()); closePackModal(); }
+  });
+  document.getElementById('pickFolderBtn').addEventListener('click', pickFolder);
+  document.getElementById('reloadFolderBtn').addEventListener('click', async () => {
+    if (!dirHandle) return;
+    const fromDisk = await loadPacksFromDisk();
+    if (fromDisk && Object.keys(fromDisk).length) {
+      packs = fromDisk;
+      const lastId = localStorage.getItem(LAST_PACK_KEY);
+      currentPackId = (lastId && packs[lastId]) ? lastId : Object.keys(packs)[0];
+      setActivePack(currentPackId);
+      refreshAllViews();
+      toast(`Reloaded ${Object.keys(packs).length} packs`, 'success');
+    } else toast('No packs found in folder', 'error');
+  });
+  document.getElementById('loadNotesBtn').addEventListener('click', loadNotesOnly);
+  document.getElementById('loadBtn').addEventListener('click', loadJSON);
+  document.getElementById('startBtn').addEventListener('click', startQuiz);
+  document.getElementById('submitBtn').addEventListener('click', submitAnswer);
+  document.getElementById('skipBtn').addEventListener('click', skipQuestion);
+  document.getElementById('nextBtn').addEventListener('click', serveNext);
+  document.getElementById('exportBtn').addEventListener('click', exportData);
+  document.getElementById('resetStateBtn').addEventListener('click', resetState);
+  document.getElementById('peekBtn').addEventListener('click', () => { if (current) openNotesModal(current.question.topic); });
+  document.getElementById('modalClose').addEventListener('click', closeNotesModal);
+  document.getElementById('notesModal').addEventListener('click', (e) => { if (e.target.id === 'notesModal') closeNotesModal(); });
+  document.getElementById('startQuizFromNotes').addEventListener('click', () => {
+    const note = state.notes.find(n => n.id === state.activeNoteId);
+    if (note) startQuiz();
+  });
+  document.getElementById('deleteNoteBtn').addEventListener('click', () => {
+    if (state.activeNoteId) deleteNote(state.activeNoteId);
+  });
+  document.getElementById('studyGoHome').addEventListener('click', () => switchTab('home'));
+  document.getElementById('quizGoHome').addEventListener('click', () => switchTab('home'));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeNotesModal(); closePackModal(); } });
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
